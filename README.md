@@ -2,7 +2,7 @@
 
 Ferramenta local de edição em lote para limpar, transformar, ordenar, filtrar e comparar texto. A interface é em português; o conteúdo editado fica no navegador.
 
-> **Projeto em preparação:** o link do repositório no header é provisório (`https://github.com/SEU_USUARIO/textutility`). Este projeto ainda não foi publicado no GitHub. A licença continua pendente de escolha do mantenedor.
+> Repositório: [github.com/fioeditor/TxtUtility](https://github.com/fioeditor/TxtUtility). A licença continua pendente de escolha do mantenedor.
 
 ## Começar
 
@@ -24,4 +24,4 @@ Transformações e importação rodam no cliente; o conteúdo não é enviado a 
 
 ## Repositório e licença
 
-Antes de disponibilizar publicamente, substitua `SEU_USUARIO` em `lib/project.ts`, atualize esta documentação, crie o repositório e escolha e adicione a licença adequada. Não publique enquanto o placeholder ou a licença pendente induzirem terceiros a acreditar que o código já está hospedado/licenciado. O botão existente apenas indica onde o link ficará; não é um repositório funcional.
+O código está em [fioeditor/TxtUtility](https://github.com/fioeditor/TxtUtility). Copie `.env.example` para `.env` se precisar de overrides locais; o `.env` não entra no Git. Escolha e adicione a licença adequada antes de tratar o projeto como redistribuível.

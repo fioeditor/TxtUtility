@@ -1,2 +1,2 @@
-export const repositoryUrl = 'https://github.com/SEU_USUARIO/textutility';
-export const repositoryUrlIsPlaceholder = true;
+export const repositoryUrl = 'https://github.com/fioeditor/TxtUtility';
+export const repositoryUrlIsPlaceholder = false;

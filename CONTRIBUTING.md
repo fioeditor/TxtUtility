@@ -1,6 +1,6 @@
 # Contribuindo com o TextUtility
 
-Obrigado por ajudar a melhorar uma ferramenta de texto local e aberta a contribuições. O repositório é um placeholder e esta política ainda não autoriza redistribuição: a licença será escolhida pelo mantenedor antes da disponibilização pública.
+Obrigado por ajudar a melhorar uma ferramenta de texto local e aberta a contribuições. Esta política ainda não autoriza redistribuição: a licença será escolhida pelo mantenedor.
 
 ## Começar
 
@@ -12,6 +12,6 @@ Prefira operações puras em `lib/operations.ts`, isoladas e testadas em `tests/
 
 Pull requests devem explicar o caso de uso, descrever comportamento/limites novos e incluir testes para a transformação. Não inclua arquivos de rascunho, saída de build, `.env`, credenciais ou conteúdo real de usuários.
 
-## Pendências de publicação
+## Ambiente local
 
-Substitua `https://github.com/SEU_USUARIO/textutility` em `lib/project.ts` pelo repositório efetivo e atualize `README.md`. Escolha e adicione a licença apropriada antes de chamar o projeto de licenciado ou aceitar redistribuição. Configure links reais de issues/segurança quando o repositório existir.
+Copie `.env.example` para `.env` se quiser overrides. Nunca faça commit de `.env`, credenciais ou conteúdo real de usuários. Escolha e adicione a licença apropriada antes de chamar o projeto de licenciado ou aceitar redistribuição.

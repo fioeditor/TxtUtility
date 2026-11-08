@@ -48,8 +48,8 @@ test('uma nova edição após restaurar uma versão encerra a ramificação futu
   assert.deepEqual(next, ['base', 'editada', 'nova edição']);
 });
 
-test('URL do repositório está centralizada e explicitamente marcada como dummy', () => {
+test('URL do repositório aponta para o GitHub publicado', () => {
   assert.equal(new URL(repositoryUrl).hostname, 'github.com');
-  assert.match(repositoryUrl, /SEU_USUARIO/);
-  assert.equal(repositoryUrlIsPlaceholder, true);
+  assert.equal(repositoryUrl, 'https://github.com/fioeditor/TxtUtility');
+  assert.equal(repositoryUrlIsPlaceholder, false);
 });
