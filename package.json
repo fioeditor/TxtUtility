@@ -1,0 +1,29 @@
+{
+  "name": "textutility",
+  "version": "2.0.0",
+  "private": true,
+  "packageManager": "npm@11.19.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "tsx --test tests/editor.test.ts tests/operations.test.ts tests/line-filters.test.ts tests/discovery.test.ts tests/history-project.test.ts"
+  },
+  "dependencies": {
+    "next": "16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "motion": "14.10.1",
+    "lucide-react": "1.70.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "4.23.15"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
