@@ -74,7 +74,7 @@ tests/              Unit tests (node:test, run with tsx)
 
 ## Contributing
 
-Contributions are welcome. New operations belong in `lib/operations.ts` with tests in `tests/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks to run before opening a pull request.
+Contributions are welcome. New operations belong in `lib/operations.ts` with tests in `tests/`. Before opening a pull request, run `npm test`, `npm run typecheck` and `npm run build`.
 
 ## License
 
