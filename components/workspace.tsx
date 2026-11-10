@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowDown, ArrowUp, ArrowUpRight, Check, ChevronDown, Copy, Download, FileText, History, Import, ListFilter, LockKeyhole, Code2, Maximize2, Minimize2, RotateCcw, Search, Eraser, Trash2, Undo2, Redo2, X, Settings2, ListOrdered, Layers, Keyboard, WrapText } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, ChevronDown, Copy, Download, FileText, History, Import, ListFilter, LockKeyhole, Maximize2, Minimize2, RotateCcw, Search, Eraser, Trash2, Undo2, Redo2, X, Settings2, ListOrdered, Layers, Keyboard, WrapText } from 'lucide-react';
 import { tools, runOperation, type Tool } from '@/lib/operations';
 import { clampRange, replaceRange, findMatches, replaceLiteralMatches, lineWindow } from '@/lib/editor';
 import { searchTools, type OperationResult } from '@/lib/discovery';
@@ -11,24 +11,27 @@ import { repositoryUrl } from '@/lib/project';
 
 const KEY = 'textutility.draft.v1';
 const MAX_TEXT = 2_000_000;
-const EXAMPLE_LABEL = 'Carregar exemplo';
+const EXAMPLE_LABEL = 'Load example';
 const categories = [
-  { id: 'clean', name: 'Limpar', icon: Eraser, hint: 'Espaços, duplicatas e caracteres.' },
-  { id: 'transform', name: 'Transformar', icon: Settings2, hint: 'Caixa, afixos e numeração.' },
-  { id: 'lines', name: 'Linhas', icon: ListOrdered, hint: 'Ordenação, filtros e delimitadores.' },
-  { id: 'lists', name: 'Listas', icon: Layers, hint: 'Comparação, mesclagem e amostragem.' },
+  { id: 'clean', name: 'Clean', icon: Eraser, hint: 'Spaces, duplicates and characters.' },
+  { id: 'transform', name: 'Transform', icon: Settings2, hint: 'Case, affixes and numbering.' },
+  { id: 'lines', name: 'Lines', icon: ListOrdered, hint: 'Sorting, filters and delimiters.' },
+  { id: 'lists', name: 'Lists', icon: Layers, hint: 'Comparison, merging and sampling.' },
 ] as const;
-const demo = '  Café Aurora  \nEstúdio Norte\nCafé Aurora\n\nBiblioteca Central\n  Mercado Verde\nEstúdio Norte\nAteliê Horizonte\n';
+const demo = '  Aurora Cafe  \nNorth Studio\nAurora Cafe\n\nCentral Library\n  Green Market\nNorth Studio\nHorizon Atelier\n';
 type Snapshot = { text: string; label: string; detail: string; serial: number };
 type Notice = { text: string; kind: 'success' | 'error' } | null;
 const defaults = (tool: Tool) => Object.fromEntries(tool.fields.map(field => [field.key, field.defaultValue]));
 const countLines = (text: string) => text.length ? text.split('\n').length : 0;
 
+// lucide-react has no brand icons, so the GitHub mark is inlined.
+const GithubIcon = () => <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>;
+
 export default function Workspace() {
   const reduced = useReducedMotion();
   const [text, setText] = useState('');
   const [ready, setReady] = useState(false);
-  const [saved, setSaved] = useState('Rascunho local');
+  const [saved, setSaved] = useState('Local draft');
   const [category, setCategory] = useState<Tool['category']>('clean');
   const [toolId, setToolId] = useState('dedupe');
   const tool = tools.find(item => item.id === toolId) ?? tools[0];
@@ -62,17 +65,17 @@ export default function Workspace() {
 
   useEffect(() => {
     let draft = '';
-    try { draft = localStorage.getItem(KEY)?.slice(0, MAX_TEXT) ?? ''; } catch { setSaved('Salvamento indisponível'); }
+    try { draft = localStorage.getItem(KEY)?.slice(0, MAX_TEXT) ?? ''; } catch { setSaved('Saving unavailable'); }
     setText(draft);
-    setSnapshots([{ text: draft, label: 'Início da sessão', detail: 'Rascunho restaurado', serial: 0 }]);
+    setSnapshots([{ text: draft, label: 'Session start', detail: 'Draft restored', serial: 0 }]);
     setReady(true);
   }, []);
   useEffect(() => {
     if (!ready) return;
-    setSaved('Salvando…');
+    setSaved('Saving…');
     const timer = setTimeout(() => {
-      try { localStorage.setItem(KEY, text); setSaved('Salvo neste navegador'); }
-      catch { setSaved('Somente nesta sessão'); }
+      try { localStorage.setItem(KEY, text); setSaved('Saved in this browser'); }
+      catch { setSaved('This session only'); }
     }, 300);
     return () => clearTimeout(timer);
   }, [text, ready]);
@@ -84,7 +87,7 @@ export default function Workspace() {
   useEffect(() => {
     if (!ready || snapshots[cursor]?.text === text) return;
     const timer = setTimeout(() => {
-      const next = retainHistory(branchHistory(snapshots, cursor).concat({ text, label: 'Edição manual', detail: String(Array.from(text).length) + ' caracteres', serial: ++serial.current }));
+      const next = retainHistory(branchHistory(snapshots, cursor).concat({ text, label: 'Manual edit', detail: String(Array.from(text).length) + ' characters', serial: ++serial.current }));
       setSnapshots(next); setCursor(next.length - 1);
     }, 600);
     return () => clearTimeout(timer);
@@ -105,10 +108,10 @@ export default function Workspace() {
     if (first) chooseTool(first.id);
   }
   function commit(next: string, label: string, detail: string) {
-    if (next.length > MAX_TEXT) return notify('O resultado excede o limite de 2 milhões de caracteres.', 'error');
-    if (next === text) return notify('O texto já está nesse formato. Nada mudou.');
+    if (next.length > MAX_TEXT) return notify('The result exceeds the 2 million character limit.', 'error');
+    if (next === text) return notify('The text is already in that format. Nothing changed.');
     let base = branchHistory(snapshots, cursor);
-    if (!base.length || base.at(-1)?.text !== text) base.push({ text, label: 'Edição manual', detail: `${text.length} caracteres`, serial: ++serial.current });
+    if (!base.length || base.at(-1)?.text !== text) base.push({ text, label: 'Manual edit', detail: `${text.length} characters`, serial: ++serial.current });
     base.push({ text: next, label, detail, serial: ++serial.current });
     base = retainHistory(base);
     setSnapshots(base); setCursor(base.length - 1); setText(next); setSelection({ start: 0, end: 0 }); setActiveMatch(-1);
@@ -117,21 +120,21 @@ export default function Workspace() {
   function restoreHistoryItem(index: number) {
     if (index === cursor && snapshots[cursor]?.text === text) return;
     const pending = snapshots[cursor]?.text !== text
-      ? { text, label: 'Edição manual', detail: 'Texto atualizado', serial: ++serial.current }
+      ? { text, label: 'Manual edit', detail: 'Text updated', serial: ++serial.current }
       : undefined;
     const restored = restoreHistory(snapshots, cursor, index, pending);
     if (!restored) return;
     setSnapshots(restored.states); setText(restored.state.text); setCursor(restored.cursor);
     setSelection({ start: 0, end: 0 }); setActiveMatch(-1);
-    notify('Versão restaurada: ' + restored.state.label);
+    notify('Version restored: ' + restored.state.label);
   }
   function loadExample() {
-    if (text && !window.confirm('Carregar o exemplo substituirá o texto atual. Você poderá desfazer essa troca. Continuar?')) return;
-    commit(demo, EXAMPLE_LABEL, 'Lista demonstrativa para experimentar');
+    if (text && !window.confirm('Loading the example will replace the current text. You can undo this. Continue?')) return;
+    commit(demo, EXAMPLE_LABEL, 'Sample list to try things out');
   }
   function undo() {
     if (snapshots[cursor]?.text !== text) {
-      const next = retainHistory(branchHistory(snapshots, cursor).concat({ text, label: 'Edição manual', detail: 'Texto atualizado', serial: ++serial.current }));
+      const next = retainHistory(branchHistory(snapshots, cursor).concat({ text, label: 'Manual edit', detail: 'Text updated', serial: ++serial.current }));
       const targetIndex = Math.max(0, next.length - 2);
       setSnapshots(next); setCursor(targetIndex); setText(next[targetIndex].text);
     } else if (cursor > 0) { setCursor(cursor - 1); setText(snapshots[cursor - 1].text); }
@@ -158,10 +161,10 @@ export default function Workspace() {
   const preview = useMemo(() => {
     if (!source || (scope === 'selection' && !hasSelection)) return { text: '', detail: '', error: '' };
     try { return { ...runOperation(tool.id, source, options), error: '' }; }
-    catch (error) { return { text: '', detail: '', error: error instanceof Error ? error.message : 'Confira as opções.' }; }
+    catch (error) { return { text: '', detail: '', error: error instanceof Error ? error.message : 'Check the options.' }; }
   }, [source, scope, hasSelection, tool.id, options]);
   function apply() {
-    if (!source) return notify(scope === 'selection' ? 'Selecione um trecho no editor primeiro.' : 'Cole ou importe um texto primeiro.', 'error');
+    if (!source) return notify(scope === 'selection' ? 'Select a passage in the editor first.' : 'Paste or import some text first.', 'error');
     if (preview.error) return notify(preview.error, 'error');
     const next = scope === 'selection' ? replaceRange(text, selection, preview.text) : preview.text;
     commit(next, tool.name, preview.detail);
@@ -177,24 +180,24 @@ export default function Workspace() {
     if (!finder.matches.length) return;
     const matches = all ? finder.matches : [finder.matches[activeMatch < 0 ? 0 : activeMatch]];
     const next = replaceLiteralMatches(text, matches, replacement);
-    commit(next, all ? 'Substituir todas' : 'Substituir ocorrência', `${matches.length} correspondências substituídas`);
+    commit(next, all ? 'Replace all' : 'Replace occurrence', `${matches.length} matches replaced`);
   }
   async function copy() {
-    try { await navigator.clipboard.writeText(text); notify('Texto copiado para a área de transferência.'); }
-    catch { editor.current?.focus(); editor.current?.select(); notify('Use Ctrl+C para copiar o texto selecionado.', 'error'); }
+    try { await navigator.clipboard.writeText(text); notify('Text copied to the clipboard.'); }
+    catch { editor.current?.focus(); editor.current?.select(); notify('Use Ctrl+C to copy the selected text.', 'error'); }
   }
   function download() {
     if (!text) return;
     const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
-    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'textutility.txt'; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); notify('Arquivo .txt preparado.');
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'textutility.txt'; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); notify('.txt file ready.');
   }
   async function importFile(event: React.ChangeEvent<HTMLInputElement>) {
     const selected = event.target.files?.[0];
     if (!selected) return;
-    if (selected.size > 4_000_000) { notify('Arquivo muito grande. Limite: 4 MB.', 'error'); event.target.value = ''; return; }
-    if (text && !window.confirm('Importar este arquivo substituirá o texto atual. A troca poderá ser desfeita. Continuar?')) { event.target.value = ''; return; }
-    try { const contents = await selected.text(); commit(contents.replace(/\r\n?/g, '\n'), 'Importar arquivo', selected.name); }
-    catch { notify('Não foi possível ler o arquivo. Tente um .txt em UTF-8.', 'error'); }
+    if (selected.size > 4_000_000) { notify('File too large. Limit: 4 MB.', 'error'); event.target.value = ''; return; }
+    if (text && !window.confirm('Importing this file will replace the current text. You can undo this. Continue?')) { event.target.value = ''; return; }
+    try { const contents = await selected.text(); commit(contents.replace(/\r\n?/g, '\n'), 'Import file', selected.name); }
+    catch { notify('Could not read the file. Try a UTF-8 .txt file.', 'error'); }
     event.target.value = '';
   }
   const stats = useMemo(() => ({ lines: countLines(text), words: (text.match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu) ?? []).length, chars: Array.from(text).length }), [text]);
@@ -206,49 +209,48 @@ export default function Workspace() {
   const previewSnippet = preview.text.length > 240 ? preview.text.slice(0, 240) + '\n…' : preview.text;
 
   return <div className={`app-shell ${expanded ? 'is-expanded' : ''}`}>
-    <a className="skip-link" href="#main-editor">Ir para o editor</a>
+    <a className="skip-link" href="#main-editor">Skip to editor</a>
     <header className="site-header">
-      <a href="/" className="wordmark" aria-label="TextUtility início"><span className="logo-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14M5 12h9M5 18h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg></span>TextUtility<span className="version">2.0</span></a>
-      <div className="header-right"><a className="source-link" href={repositoryUrl} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer" aria-label="Código aberto no GitHub"><Code2 size={15}/><span>Código aberto</span><ArrowUpRight size={13}/></a><span className="private-label"><LockKeyhole size={13}/>Processamento local</span><button className="help-button" onClick={() => setHelpOpen(!helpOpen)} aria-expanded={helpOpen}><Keyboard size={16}/><span>Atalhos</span></button></div>
+      <a href="/" className="wordmark" aria-label="TextUtility home"><span className="logo-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14M5 12h9M5 18h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg></span>TextUtility</a>
+      <div className="header-right"><a className="source-link" href={repositoryUrl} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer" aria-label="TextUtility on GitHub"><GithubIcon/><span>GitHub</span></a><button className="help-button" onClick={() => setHelpOpen(!helpOpen)} aria-expanded={helpOpen}><Keyboard size={16}/><span>Shortcuts</span></button></div>
     </header>
-    {helpOpen && <section className="shortcuts" aria-label="Atalhos"><span><kbd>Ctrl F</kbd> Buscar texto</span><span><kbd>Ctrl K</kbd> Buscar ferramenta</span><span><kbd>Ctrl Z</kbd> Desfazer</span><span><kbd>Ctrl Shift Z</kbd> Refazer</span><span><kbd>Ctrl S</kbd> Baixar (no editor)</span><button aria-label="Fechar atalhos" onClick={() => setHelpOpen(false)}><X size={15}/></button></section>}
+    {helpOpen && <section className="shortcuts" aria-label="Shortcuts"><span><kbd>Ctrl F</kbd> Find in text</span><span><kbd>Ctrl K</kbd> Find a tool</span><span><kbd>Ctrl Z</kbd> Undo</span><span><kbd>Ctrl Shift Z</kbd> Redo</span><span><kbd>Ctrl S</kbd> Download (in editor)</span><button aria-label="Close shortcuts" onClick={() => setHelpOpen(false)}><X size={15}/></button></section>}
     <main className="main-content">
-      <section className="workspace-intro"><div><p className="product-kicker">{tools.length} FERRAMENTAS <span>· EDIÇÃO EM LOTE</span></p><h1>Editor de texto em lote.</h1><p>Limpe, transforme e organize listas sem trocar de ferramenta.</p></div><button className="demo-button" title="Carrega conteúdo de demonstração; pedirá confirmação se o editor não estiver vazio" onClick={loadExample}>Carregar exemplo <ArrowUpRight size={15}/></button></section>
-      <nav className="category-nav" aria-label="Categorias de ferramentas">
+      <nav className="category-nav" aria-label="Tool categories">
         <div className="category-tabs">{categories.map(({ id, name, icon: Icon }) => <button key={id} className={category === id ? 'category-tab active' : 'category-tab'} onClick={() => chooseCategory(id)} aria-pressed={category === id}><Icon size={16}/>{name}<span>{tools.filter(t => t.category === id).length}</span>{category === id && <motion.i layoutId="category-line" transition={{ duration: reduced ? 0 : .18 }}/>}</button>)}</div>
-        <div className="tool-search-wrap"><Search size={15}/><input ref={toolSearch} id="tool-search" type="search" role="combobox" aria-label="Buscar ferramentas por tarefa" aria-autocomplete="list" aria-expanded={searchOpen && Boolean(toolQuery)} aria-controls={searchOpen && toolQuery ? "tool-search-results" : undefined} aria-activedescendant={searchOpen && searchResults.length ? 'tool-search-option-' + activeSearchIndex : undefined} placeholder="O que você quer fazer? Ex.: remover linhas que contêm…" value={toolQuery} onFocus={() => setSearchOpen(true)} onBlur={() => setTimeout(() => setSearchOpen(false),160)} onChange={event => { setToolQuery(event.target.value); setSearchOpen(true); setActiveSearchIndex(0); }} onKeyDown={event => { if(event.key==='ArrowDown' && searchResults.length){event.preventDefault();setActiveSearchIndex(index=>(index+1)%searchResults.length);} if(event.key==='ArrowUp' && searchResults.length){event.preventDefault();setActiveSearchIndex(index=>(index-1+searchResults.length)%searchResults.length);} if(event.key==='Enter' && searchOpen && searchResults.length){event.preventDefault();selectToolResult(searchResults[activeSearchIndex] ?? searchResults[0]);} if(event.key==='Escape'){setSearchOpen(false);setToolQuery('');} }}/>{toolQuery && <button type="button" className="search-clear" aria-label="Limpar busca" onMouseDown={event=>event.preventDefault()} onClick={()=>{setToolQuery('');setSearchOpen(true);toolSearch.current?.focus();}}><X size={13}/></button>}<kbd>Ctrl K</kbd>{searchOpen && toolQuery && <div id="tool-search-results" role={searchResults.length ? "listbox" : "status"} aria-label="Resultados da busca de ferramentas" className="tool-search-results">{searchResults.length ? searchResults.map((result,index)=><button type="button" role="option" aria-selected={activeSearchIndex===index} id={'tool-search-option-'+index} key={result.tool.id+'-'+(result.mode??'')} onMouseDown={event=>event.preventDefault()} onMouseEnter={()=>setActiveSearchIndex(index)} onClick={()=>selectToolResult(result)}><span className="search-result-icon">{result.tool.id==='filter'?<ListFilter size={14}/>:<Settings2 size={14}/>}</span><span className="search-result-copy"><strong>{result.label}</strong><small>{result.tool.description}</small></span><span className="search-result-category">{categories.find(item=>item.id===result.tool.category)?.name}</span></button>) : <p>Nenhuma ferramenta encontrada. Tente “linhas”, “ordenar” ou “limpar”.</p>}</div>}</div>
+        <div className="tool-search-wrap"><Search size={15}/><input ref={toolSearch} id="tool-search" type="search" role="combobox" aria-label="Search tools by task" aria-autocomplete="list" aria-expanded={searchOpen && Boolean(toolQuery)} aria-controls={searchOpen && toolQuery ? "tool-search-results" : undefined} aria-activedescendant={searchOpen && searchResults.length ? 'tool-search-option-' + activeSearchIndex : undefined} placeholder="What do you want to do? e.g. remove lines containing…" value={toolQuery} onFocus={() => setSearchOpen(true)} onBlur={() => setTimeout(() => setSearchOpen(false),160)} onChange={event => { setToolQuery(event.target.value); setSearchOpen(true); setActiveSearchIndex(0); }} onKeyDown={event => { if(event.key==='ArrowDown' && searchResults.length){event.preventDefault();setActiveSearchIndex(index=>(index+1)%searchResults.length);} if(event.key==='ArrowUp' && searchResults.length){event.preventDefault();setActiveSearchIndex(index=>(index-1+searchResults.length)%searchResults.length);} if(event.key==='Enter' && searchOpen && searchResults.length){event.preventDefault();selectToolResult(searchResults[activeSearchIndex] ?? searchResults[0]);} if(event.key==='Escape'){setSearchOpen(false);setToolQuery('');} }}/>{toolQuery && <button type="button" className="search-clear" aria-label="Clear search" onMouseDown={event=>event.preventDefault()} onClick={()=>{setToolQuery('');setSearchOpen(true);toolSearch.current?.focus();}}><X size={13}/></button>}<kbd>Ctrl K</kbd>{searchOpen && toolQuery && <div id="tool-search-results" role={searchResults.length ? "listbox" : "status"} aria-label="Tool search results" className="tool-search-results">{searchResults.length ? searchResults.map((result,index)=><button type="button" role="option" aria-selected={activeSearchIndex===index} id={'tool-search-option-'+index} key={result.tool.id+'-'+(result.mode??'')} onMouseDown={event=>event.preventDefault()} onMouseEnter={()=>setActiveSearchIndex(index)} onClick={()=>selectToolResult(result)}><span className="search-result-icon">{result.tool.id==='filter'?<ListFilter size={14}/>:<Settings2 size={14}/>}</span><span className="search-result-copy"><strong>{result.label}</strong><small>{result.tool.description}</small></span><span className="search-result-category">{categories.find(item=>item.id===result.tool.category)?.name}</span></button>) : <p>No tools found. Try “lines”, “sort” or “clean”.</p>}</div>}</div>
       </nav>
-<div className="category-actions" role="group" aria-label={'Operações de ' + currentCategory.name}><span className="category-actions-label">Ações de {currentCategory.name}</span>{tools.filter(item=>item.category===category).flatMap(item=>item.id==='filter'?[{key:'filter-remove',item,label:'Remover linhas que contêm…',mode:'remove' as const},{key:'filter-keep',item,label:'Manter linhas que contêm…',mode:'keep' as const}]:[{key:item.id,item,label:item.name,mode:undefined as ('remove'|'keep'|undefined)}]).map(action=><button type="button" key={action.key} title={action.item.description} aria-pressed={toolId===action.item.id && (action.item.id!=='filter'||options.mode===action.mode)} className={toolId===action.item.id && (action.item.id!=='filter'||options.mode===action.mode)?'active':''} onClick={()=>chooseTool(action.item.id,action.mode)}>{action.item.id==='filter'?(action.mode==='remove'?<Trash2 size={13}/>:<ListFilter size={13}/>):<span className="action-dot" aria-hidden="true"/>}{action.label}</button>)}</div>
+<div className="category-actions" role="group" aria-label={currentCategory.name + ' actions'}><span className="category-actions-label">{currentCategory.name} actions</span>{tools.filter(item=>item.category===category).flatMap(item=>item.id==='filter'?[{key:'filter-remove',item,label:'Remove lines containing…',mode:'remove' as const},{key:'filter-keep',item,label:'Keep lines containing…',mode:'keep' as const}]:[{key:item.id,item,label:item.name,mode:undefined as ('remove'|'keep'|undefined)}]).map(action=><button type="button" key={action.key} title={action.item.description} aria-pressed={toolId===action.item.id && (action.item.id!=='filter'||options.mode===action.mode)} className={toolId===action.item.id && (action.item.id!=='filter'||options.mode===action.mode)?'active':''} onClick={()=>chooseTool(action.item.id,action.mode)}>{action.item.id==='filter'?(action.mode==='remove'?<Trash2 size={13}/>:<ListFilter size={13}/>):<span className="action-dot" aria-hidden="true"/>}{action.label}</button>)}</div>
       <div className="workbench">
         <section className="document" aria-labelledby="document-title">
-          <div className="document-top"><div className="document-name"><FileText size={17}/><h2 id="document-title">Editor de texto</h2><span className="draft-dot" title={saved}/></div><div className="document-tools"><button onClick={undo} disabled={!canUndo} title="Desfazer" aria-label="Desfazer"><Undo2 size={16}/></button><button onClick={redo} disabled={!canRedo} title="Refazer" aria-label="Refazer"><Redo2 size={16}/></button><span className="toolbar-divider"/><button onClick={() => { setFindOpen(!findOpen); if (!findOpen) setTimeout(() => search.current?.focus(), 0); }} className={findOpen ? 'selected' : ''} aria-label="Localizar e substituir" aria-expanded={findOpen}><Search size={16}/></button><button onClick={() => setWrap(!wrap)} className={wrap ? 'selected' : ''} title="Quebra visual de linhas" aria-label="Quebra visual de linhas" aria-pressed={wrap}><WrapText size={16}/></button><button onClick={() => setExpanded(!expanded)} title="Expandir editor" aria-label={expanded ? 'Restaurar editor' : 'Expandir editor'}>{expanded ? <Minimize2 size={16}/> : <Maximize2 size={16}/>}</button></div></div>
-          {findOpen && <div className="find-panel"><div className="find-row"><Search size={15}/><input ref={search} aria-label="Buscar no texto" placeholder="Buscar no texto…" value={query} onChange={e => { setQuery(e.target.value); setActiveMatch(-1); }} onKeyDown={e => { if (e.key === 'Enter') find(e.shiftKey ? -1 : 1); if (e.key === 'Escape') setFindOpen(false); }}/><span className="match-count">{activeMatch >= 0 && activeMatch < finder.matches.length ? `${activeMatch + 1}/` : ''}{finder.matches.length}</span><button aria-label="Correspondência anterior" disabled={!finder.matches.length} onClick={() => find(-1)}><ArrowUp size={14}/></button><button aria-label="Próxima correspondência" disabled={!finder.matches.length} onClick={() => find(1)}><ArrowDown size={14}/></button><button aria-label="Fechar busca" onClick={() => setFindOpen(false)}><X size={14}/></button></div><div className="find-options"><label><input type="checkbox" checked={matchCase} onChange={e => { setMatchCase(e.target.checked); setActiveMatch(-1); }}/>Diferenciar caixa</label><label><input type="checkbox" checked={regex} onChange={e => { setRegex(e.target.checked); setActiveMatch(-1); }}/>Expressão regular</label><button onClick={() => setReplaceOpen(!replaceOpen)} aria-expanded={replaceOpen}>Substituir <ChevronDown size={12}/></button></div>{replaceOpen && <div className="replace-row"><input aria-label="Texto substituto" placeholder="Texto literal (vazio para remover)" title="Substituição literal: grupos como $1 não são expandidos." value={replacement} onChange={e => setReplacement(e.target.value)}/><button disabled={!finder.matches.length} onClick={() => replace(false)}>Uma</button><button disabled={!finder.matches.length} onClick={() => replace(true)}>Todas</button></div>}{finder.error && <p className="field-error" role="alert">{finder.error}</p>}</div>}
+          <div className="document-top"><div className="document-name"><FileText size={17}/><h2 id="document-title">Text editor</h2><span className="draft-dot" title={saved}/></div><div className="document-tools"><button onClick={undo} disabled={!canUndo} title="Undo" aria-label="Undo"><Undo2 size={16}/></button><button onClick={redo} disabled={!canRedo} title="Redo" aria-label="Redo"><Redo2 size={16}/></button><span className="toolbar-divider"/><button onClick={() => { setFindOpen(!findOpen); if (!findOpen) setTimeout(() => search.current?.focus(), 0); }} className={findOpen ? 'selected' : ''} aria-label="Find and replace" aria-expanded={findOpen}><Search size={16}/></button><button onClick={() => setWrap(!wrap)} className={wrap ? 'selected' : ''} title="Soft line wrap" aria-label="Soft line wrap" aria-pressed={wrap}><WrapText size={16}/></button><button onClick={() => setExpanded(!expanded)} title="Expand editor" aria-label={expanded ? 'Restore editor' : 'Expand editor'}>{expanded ? <Minimize2 size={16}/> : <Maximize2 size={16}/>}</button></div></div>
+          {findOpen && <div className="find-panel"><div className="find-row"><Search size={15}/><input ref={search} aria-label="Search in text" placeholder="Search in text…" value={query} onChange={e => { setQuery(e.target.value); setActiveMatch(-1); }} onKeyDown={e => { if (e.key === 'Enter') find(e.shiftKey ? -1 : 1); if (e.key === 'Escape') setFindOpen(false); }}/><span className="match-count">{activeMatch >= 0 && activeMatch < finder.matches.length ? `${activeMatch + 1}/` : ''}{finder.matches.length}</span><button aria-label="Previous match" disabled={!finder.matches.length} onClick={() => find(-1)}><ArrowUp size={14}/></button><button aria-label="Next match" disabled={!finder.matches.length} onClick={() => find(1)}><ArrowDown size={14}/></button><button aria-label="Close search" onClick={() => setFindOpen(false)}><X size={14}/></button></div><div className="find-options"><label><input type="checkbox" checked={matchCase} onChange={e => { setMatchCase(e.target.checked); setActiveMatch(-1); }}/>Match case</label><label><input type="checkbox" checked={regex} onChange={e => { setRegex(e.target.checked); setActiveMatch(-1); }}/>Regular expression</label><button onClick={() => setReplaceOpen(!replaceOpen)} aria-expanded={replaceOpen}>Replace <ChevronDown size={12}/></button></div>{replaceOpen && <div className="replace-row"><input aria-label="Replacement text" placeholder="Literal text (empty to delete)" title="Literal replacement: groups like $1 are not expanded." value={replacement} onChange={e => setReplacement(e.target.value)}/><button disabled={!finder.matches.length} onClick={() => replace(false)}>One</button><button disabled={!finder.matches.length} onClick={() => replace(true)}>All</button></div>}{finder.error && <p className="field-error" role="alert">{finder.error}</p>}</div>}
           <div className="editor-surface">
             {!wrap && <pre className="line-gutter" aria-hidden="true"><span style={{ display: 'block', transform: `translateY(${lines.offset}px)` }}>{Array.from({ length: lines.count }, (_, i) => lines.first + i + 1).join('\n')}</span></pre>}
-            <textarea ref={editor} id="main-editor" aria-label="Editor de texto" wrap={wrap ? 'soft' : 'off'} spellCheck={false} maxLength={MAX_TEXT} value={text} placeholder={'Cole seu texto aqui.\n\nUma lista, um rascunho, um CSV…\nDeixe o resto com as ferramentas ao lado.'} onChange={e => { setText(e.currentTarget.value); setSelection(clampRange({ start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd }, e.currentTarget.value.length)); setSnapshots(branchHistory(snapshots, cursor)); setActiveMatch(-1); }} onSelect={e => setSelection({ start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd })} onScroll={e => setScrollTop(e.currentTarget.scrollTop)}/>
-            {!text && <div className="empty-actions"><button onClick={() => file.current?.click()}><Import size={14}/>Importar arquivo</button><span>ou cole com <kbd>Ctrl V</kbd></span></div>}
+            <textarea ref={editor} id="main-editor" aria-label="Text editor" wrap={wrap ? 'soft' : 'off'} spellCheck={false} maxLength={MAX_TEXT} value={text} placeholder={'Paste your text here.\n\nA list, a draft, a CSV…\nLeave the rest to the tools on the side.'} onChange={e => { setText(e.currentTarget.value); setSelection(clampRange({ start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd }, e.currentTarget.value.length)); setSnapshots(branchHistory(snapshots, cursor)); setActiveMatch(-1); }} onSelect={e => setSelection({ start: e.currentTarget.selectionStart, end: e.currentTarget.selectionEnd })} onScroll={e => setScrollTop(e.currentTarget.scrollTop)}/>
+            {!text && <div className="empty-actions"><button onClick={() => file.current?.click()}><Import size={14}/>Import file</button><button onClick={loadExample} title="Loads sample content">Load example</button><span>or paste with <kbd>Ctrl V</kbd></span></div>}
           </div>
-          <div className="document-stats"><span className="save-state" role="status" aria-live="polite" aria-atomic="true"><span/> {ready ? saved : 'Carregando rascunho…'}</span><div><span><b>{stats.lines.toLocaleString('pt-BR')}</b> linhas</span><span><b>{stats.words.toLocaleString('pt-BR')}</b> palavras</span><span><b>{stats.chars.toLocaleString('pt-BR')}</b> caracteres</span></div></div>
-          <div className="document-bottom"><input ref={file} type="file" hidden accept=".txt,.csv,text/plain,text/csv" onChange={importFile}/><button className="secondary-button import-button" onClick={() => file.current?.click()}><Import size={15}/>Importar</button><button className="clear-document" disabled={!text} onClick={() => commit('', 'Limpar documento', 'Todo o conteúdo removido; pode ser desfeito')}><Trash2 size={14}/>Limpar</button><div className="export-actions"><button className="secondary-button" onClick={copy} disabled={!text}><Copy size={15}/>Copiar</button><button className="dark-button" onClick={download} disabled={!text}><Download size={15}/>Baixar .txt</button></div></div>
+          <div className="document-stats"><span className="save-state" role="status" aria-live="polite" aria-atomic="true"><span/> {ready ? saved : 'Loading draft…'}</span><div><span><b>{stats.lines.toLocaleString('en-US')}</b> lines</span><span><b>{stats.words.toLocaleString('en-US')}</b> words</span><span><b>{stats.chars.toLocaleString('en-US')}</b> characters</span></div></div>
+          <div className="document-bottom"><input ref={file} type="file" hidden accept=".txt,.csv,text/plain,text/csv" onChange={importFile}/><button className="secondary-button import-button" onClick={() => file.current?.click()}><Import size={15}/>Import</button><button className="clear-document" disabled={!text} onClick={() => commit('', 'Clear document', 'All content removed; can be undone')}><Trash2 size={14}/>Clear</button><div className="export-actions"><button className="secondary-button" onClick={copy} disabled={!text}><Copy size={15}/>Copy</button><button className="dark-button" onClick={download} disabled={!text}><Download size={15}/>Download .txt</button></div></div>
         </section>
-        <aside className="tool-panel" aria-label="Configuração de ferramenta">
+        <aside className="tool-panel" aria-label="Tool settings">
           <div className="tool-panel-top"><span className="panel-label"><currentCategory.icon size={14}/>{currentCategory.name}</span><p>{currentCategory.hint}</p></div>
-          <div className="tool-picker"><label htmlFor="tool-select">Ferramenta</label><div className="select-container"><select id="tool-select" value={toolId} onChange={e => chooseTool(e.target.value)}>{tools.filter(item => item.category === category).map(item => <option key={item.id} value={item.id}>{item.id === 'filter' ? (options.mode === 'remove' ? 'Remover linhas que contêm…' : 'Manter linhas que contêm…') : item.name}</option>)}</select><ChevronDown size={16}/></div></div>
+          <div className="tool-picker"><label htmlFor="tool-select">Tool</label><div className="select-container"><select id="tool-select" value={toolId} onChange={e => chooseTool(e.target.value)}>{tools.filter(item => item.category === category).map(item => <option key={item.id} value={item.id}>{item.id === 'filter' ? (options.mode === 'remove' ? 'Remove lines containing…' : 'Keep lines containing…') : item.name}</option>)}</select><ChevronDown size={16}/></div></div>
           <AnimatePresence mode="wait" initial={false}><motion.div key={tool.id} className="tool-content" initial={reduced ? { opacity: .8 } : { opacity: 0, transform: 'translateY(6px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} exit={{ opacity: 0 }} transition={{ duration: reduced ? .08 : .16, ease: [.16, 1, .3, 1] }}>
-            <h3>{tool.id === 'filter' ? (options.mode === 'remove' ? 'Remover linhas que…' : 'Manter linhas que…') : tool.name}</h3><p className="tool-description">{tool.description}</p>
+            <h3>{tool.id === 'filter' ? (options.mode === 'remove' ? 'Remove lines that…' : 'Keep lines that…') : tool.name}</h3><p className="tool-description">{tool.description}</p>
             <div className="tool-fields">{tool.fields.map(field => field.type === 'checkbox' ? <label className="checkbox-field" key={field.key}><input type="checkbox" checked={options[field.key] === 'true'} onChange={e => setOptions({ ...options, [field.key]: String(e.target.checked) })}/><span>{field.label}</span></label> : <label className="form-field" key={field.key}><span>{field.label}</span>{field.type === 'select' ? <div className="select-container"><select disabled={tool.id === 'filter' && field.key === 'matchType' && options.regex === 'true'} value={options[field.key] ?? ''} onChange={e => setOptions({ ...options, [field.key]: e.target.value })}>{field.options?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select><ChevronDown size={14}/></div> : field.type === 'textarea' ? <textarea value={options[field.key] ?? ''} placeholder={field.placeholder} onChange={e => setOptions({ ...options, [field.key]: e.target.value })}/> : <input type={field.type} value={options[field.key] ?? ''} placeholder={field.placeholder} onChange={e => setOptions({ ...options, [field.key]: e.target.value })}/>}</label>)}</div>
           </motion.div></AnimatePresence>
-          <div className="scope-row"><span>Aplicar em</span><div className="segmented"><button aria-pressed={scope === 'all'} className={scope === 'all' ? 'active' : ''} onClick={() => setScope('all')}>Texto inteiro</button><button aria-pressed={scope === 'selection'} className={scope === 'selection' ? 'active' : ''} onClick={() => setScope('selection')}>Seleção</button></div></div>
-          <div className="result-preview"><div className="preview-label"><span><ListFilter size={13}/>Prévia do resultado</span><span>{source && !preview.error ? `${countLines(preview.text)} linhas` : '—'}</span></div>{preview.error ? <p className="field-error" role="alert">{preview.error}</p> : source ? <><pre>{previewSnippet || '(texto vazio)'}</pre><p className="preview-detail">{preview.detail}</p></> : <p className="preview-empty">{scope === 'selection' ? 'Selecione um trecho para ver o resultado.' : 'Adicione um texto para ver o resultado antes de aplicar.'}</p>}</div>
-          <button className="apply-button" onClick={apply} disabled={!source || !!preview.error}><Settings2 size={16}/>{tool.id === 'filter' ? (options.mode === 'remove' ? 'Remover linhas correspondentes' : 'Manter linhas correspondentes') : `Aplicar ao ${scope === 'selection' ? 'trecho' : 'texto'}`}<ArrowUpRight size={16}/></button><p className="reversible-note"><RotateCcw size={11}/>Até dez edições para desfazer e restaurar.</p>
+          <div className="scope-row"><span>Apply to</span><div className="segmented"><button aria-pressed={scope === 'all'} className={scope === 'all' ? 'active' : ''} onClick={() => setScope('all')}>Whole text</button><button aria-pressed={scope === 'selection'} className={scope === 'selection' ? 'active' : ''} onClick={() => setScope('selection')}>Selection</button></div></div>
+          <div className="result-preview"><div className="preview-label"><span><ListFilter size={13}/>Result preview</span><span>{source && !preview.error ? `${countLines(preview.text)} lines` : '—'}</span></div>{preview.error ? <p className="field-error" role="alert">{preview.error}</p> : source ? <><pre>{previewSnippet || '(empty text)'}</pre><p className="preview-detail">{preview.detail}</p></> : <p className="preview-empty">{scope === 'selection' ? 'Select a passage to see the result.' : 'Add some text to see the result before applying.'}</p>}</div>
+          <button className="apply-button" onClick={apply} disabled={!source || !!preview.error}><Settings2 size={16}/>{tool.id === 'filter' ? (options.mode === 'remove' ? 'Remove matching lines' : 'Keep matching lines') : `Apply to ${scope === 'selection' ? 'selection' : 'text'}`}</button><p className="reversible-note"><RotateCcw size={11}/>Up to ten edits to undo and restore.</p>
         </aside>
       </div>
       <section className="history-strip" aria-labelledby="history-title">
-        <div className="history-header"><h2 id="history-title"><History size={15}/>Histórico</h2><span>{history.length} / {MAX_HISTORY_EDITS} edições recentes</span></div>
-        {!history.length ? <p className="history-empty">Cada aplicação cria uma versão restaurável. Acesse as dez últimas edições desta sessão; desfazer e refazer continuam disponíveis no editor.</p> : <div className="history-items">{history.map(item => <div key={item.serial} className={item.index > cursor ? 'history-item undone' : 'history-item'}><span className="history-icon">{item.index > cursor ? <Undo2 size={13}/> : <Check size={13}/>}</span><div className="history-entry-copy"><strong>{item.label}</strong><span>{item.detail}</span></div><span className="history-state">{item.index === cursor && item.text === text ? 'Atual' : item.index > cursor ? 'Depois da atual' : 'Anterior'}</span><button type="button" className="history-restore" disabled={item.index === cursor && item.text === text} aria-label={'Restaurar edição: ' + item.label} title={item.index === cursor && item.text === text ? 'Esta é a versão atual' : 'Restaurar esta versão'} onClick={() => restoreHistoryItem(item.index)}>{item.index === cursor && item.text === text ? 'Atual' : <><RotateCcw size={13}/>Restaurar</>}</button></div>)}</div>}
+        <div className="history-header"><h2 id="history-title"><History size={15}/>History</h2><span>{history.length} / {MAX_HISTORY_EDITS} recent edits</span></div>
+        {!history.length ? <p className="history-empty">Every applied operation creates a restorable version. The last ten edits of this session are available here; undo and redo remain available in the editor.</p> : <div className="history-items">{history.map(item => <div key={item.serial} className={item.index > cursor ? 'history-item undone' : 'history-item'}><span className="history-icon">{item.index > cursor ? <Undo2 size={13}/> : <Check size={13}/>}</span><div className="history-entry-copy"><strong>{item.label}</strong><span>{item.detail}</span></div><span className="history-state">{item.index === cursor && item.text === text ? 'Current' : item.index > cursor ? 'After current' : 'Previous'}</span><button type="button" className="history-restore" disabled={item.index === cursor && item.text === text} aria-label={'Restore edit: ' + item.label} title={item.index === cursor && item.text === text ? 'This is the current version' : 'Restore this version'} onClick={() => restoreHistoryItem(item.index)}>{item.index === cursor && item.text === text ? 'Current' : <><RotateCcw size={13}/>Restore</>}</button></div>)}</div>}
       </section>
-      <footer className="workspace-footer"><span><LockKeyhole size={12}/>Seu texto não é enviado. Rascunho salvo apenas neste navegador.</span><span>Projeto preparado para código aberto.</span></footer>
+      <footer className="workspace-footer"><span><LockKeyhole size={12}/>Your text never leaves your browser. The draft is saved only in this browser.</span></footer>
     </main>
-    <AnimatePresence>{notice && <motion.div className={`toast ${notice.kind}`} role={notice.kind === 'error' ? 'alert' : 'status'} initial={{ opacity: 0, transform: reduced ? 'none' : 'translateY(8px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} exit={{ opacity: 0 }} transition={{ duration: .16, ease: [.16, 1, .3, 1] }}>{notice.kind === 'success' && <Check size={15}/>}<span>{notice.text}</span><button onClick={() => setNotice(null)} aria-label="Fechar aviso"><X size={14}/></button></motion.div>}</AnimatePresence>
+    <AnimatePresence>{notice && <motion.div className={`toast ${notice.kind}`} role={notice.kind === 'error' ? 'alert' : 'status'} initial={{ opacity: 0, transform: reduced ? 'none' : 'translateY(8px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} exit={{ opacity: 0 }} transition={{ duration: .16, ease: [.16, 1, .3, 1] }}>{notice.kind === 'success' && <Check size={15}/>}<span>{notice.text}</span><button onClick={() => setNotice(null)} aria-label="Close notice"><X size={14}/></button></motion.div>}</AnimatePresence>
   </div>;
 }

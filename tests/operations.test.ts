@@ -30,7 +30,7 @@ const requiredIds = [
   'sample',
 ] as const;
 
-test('expõe catálogo tipado, completo e sem IDs duplicados', () => {
+test('exposes a typed, complete catalog without duplicate IDs', () => {
   assert.deepEqual(tools.map((tool) => tool.id), requiredIds);
   assert.equal(new Set(tools.map((tool) => tool.id)).size, requiredIds.length);
   for (const tool of tools) {
@@ -46,7 +46,7 @@ test('expõe catálogo tipado, completo e sem IDs duplicados', () => {
   }
 });
 
-test('limpeza trata vazios, duplicatas, palavras, espaços, acentos, pontuação e dígitos', () => {
+test('cleanup handles empty lines, duplicates, words, spaces, accents, punctuation and digits', () => {
   assert.equal(apply('empty', '\n  \t\nA\n\n'), 'A\n');
   assert.equal(apply('empty', '\n  \t\n'), '');
   assert.equal(apply('dedupe', ' A \na\nB\nb\n', { ignoreCase: 'true' }), ' A \nB\n');
@@ -60,7 +60,7 @@ test('limpeza trata vazios, duplicatas, palavras, espaços, acentos, pontuação
   assert.equal(apply('digits', 'A1 ٢ B3'), 'A  B');
 });
 
-test('transformações usam caixa pt-BR, Unicode, afixos e numeração configurável', () => {
+test('transformations handle case, Unicode, affixes and configurable numbering', () => {
   assert.equal(apply('upper', 'ação içá'), 'AÇÃO IÇÁ');
   assert.equal(apply('lower', 'AÇÃO IÇÁ'), 'ação içá');
   assert.equal(apply('title', 'olá, mundo! ação-é'), 'Olá, Mundo! Ação-É');
@@ -74,7 +74,7 @@ test('transformações usam caixa pt-BR, Unicode, afixos e numeração configur�
   assert.equal(apply('number', '', {}), '');
 });
 
-test('ordenação cobre todos os modos, caixa, números negativos/decimais e vazios ao final', () => {
+test('sorting covers every mode, case, negative/decimal numbers and empty lines at the end', () => {
   assert.equal(apply('sort', 'b\na', { mode: 'az' }), 'a\nb');
   assert.equal(apply('sort', 'a\nb', { mode: 'za' }), 'b\na');
   assert.equal(apply('sort', '-1.5\n10\n2\n\n', { mode: 'numeric' }), '-1.5\n2\n10\n\n');
@@ -93,17 +93,17 @@ test('ordenação cobre todos os modos, caixa, números negativos/decimais e vaz
   }
 });
 
-test('filtro aceita literal e regex, preservando o texto quando a regex é inválida', () => {
+test('filter accepts literal text and regex, rejecting invalid expressions', () => {
   assert.equal(apply('filter', 'Água\nÁGUA\nsol', { term: 'água', ignoreCase: 'true', mode: 'keep' }), 'Água\nÁGUA');
   assert.equal(apply('filter', 'um1\num2\ndois', { term: '^um\\d$', regex: 'true', mode: 'remove' }), 'dois');
   assert.throws(
     () => apply('filter', 'a\nb', { term: '[', regex: 'true', mode: 'keep' }),
-    /Expressão regular inválida/,
+    /Invalid regular expression/,
   );
-  assert.throws(() => apply('filter', 'a', { mode: 'keep' }), /termo do filtro é obrigatório/);
+  assert.throws(() => apply('filter', 'a', { mode: 'keep' }), /filter term is required/);
 });
 
-test('divisão, junção e coluna usam delimitadores literais com escapes', () => {
+test('split, join and column use literal delimiters with escapes', () => {
   assert.equal(apply('split', 'a.b.c', { delimiter: '.' }), 'a\nb\nc');
   assert.equal(apply('split', 'a\tb', { delimiter: '\\t' }), 'a\nb');
   assert.equal(apply('join', 'a\nb\nc', { delimiter: '\\t' }), 'a\tb\tc');
@@ -112,7 +112,7 @@ test('divisão, junção e coluna usam delimitadores literais com escapes', () =
   assert.equal(apply('split', '', { delimiter: ',' }), '');
 });
 
-test('comparação, mesclagem e amostra preservam ordem e respeitam configuração', () => {
+test('compare, merge and sample preserve order and honor options', () => {
   assert.equal(
     apply('compare', 'A\nb\nc', { other: 'a\nC', mode: 'intersection', ignoreCase: 'true' }),
     'A\nc',
@@ -130,19 +130,19 @@ test('comparação, mesclagem e amostra preservam ordem e respeitam configuraç�
   }
 });
 
-test('valida entradas, delimitadores, números, modos, limites e opções', () => {
-  assert.throws(() => runOperation('não-existe', 'texto', {}), /Operação desconhecida/);
-  assert.throws(() => runOperation('upper', 42 as unknown as string, {}), /texto de entrada/);
-  assert.throws(() => runOperation('upper', 'texto', null as unknown as Record<string, string>), /opções devem ser um objeto/);
-  assert.throws(() => runOperation('dedupe', 'a', { ignoreCase: 'sim' }), /deve ser true ou false/);
-  assert.throws(() => runOperation('upper', 'a', { desconhecida: 'x' }), /Opção desconhecida/);
-  assert.throws(() => apply('split', 'a,b', { delimiter: '' }), /delimitador não pode ser vazio/);
-  assert.throws(() => apply('join', 'a\nb', { delimiter: '' }), /delimitador não pode ser vazio/);
-  assert.throws(() => apply('column', 'a,b', { delimiter: ',', index: '0' }), /Índice da coluna/);
-  assert.throws(() => apply('number', 'a', { start: 'infinito' }), /Início deve ser um número válido/);
-  assert.throws(() => apply('number', 'a', { padding: '1001' }), /Zeros à esquerda/);
-  assert.throws(() => apply('sort', '2\nnão é número', { mode: 'numeric' }), /Todas as linhas não vazias/);
-  assert.throws(() => apply('sort', 'a', { mode: 'inexistente' }), /Valor inválido/);
-  assert.throws(() => apply('sample', 'a\nb', { count: '3' }), /não pode exceder/);
-  assert.throws(() => apply('sample', 'a', { count: '-1' }), /Quantidade/);
+test('validates inputs, delimiters, numbers, modes, limits and options', () => {
+  assert.throws(() => runOperation('does-not-exist', 'text', {}), /Unknown operation/);
+  assert.throws(() => runOperation('upper', 42 as unknown as string, {}), /input text/);
+  assert.throws(() => runOperation('upper', 'text', null as unknown as Record<string, string>), /Options must be an object/);
+  assert.throws(() => runOperation('dedupe', 'a', { ignoreCase: 'yes' }), /must be true or false/);
+  assert.throws(() => runOperation('upper', 'a', { unknown: 'x' }), /Unknown option/);
+  assert.throws(() => apply('split', 'a,b', { delimiter: '' }), /delimiter cannot be empty/);
+  assert.throws(() => apply('join', 'a\nb', { delimiter: '' }), /delimiter cannot be empty/);
+  assert.throws(() => apply('column', 'a,b', { delimiter: ',', index: '0' }), /Column index/);
+  assert.throws(() => apply('number', 'a', { start: 'infinity' }), /Start must be a valid number/);
+  assert.throws(() => apply('number', 'a', { padding: '1001' }), /Leading zeros/);
+  assert.throws(() => apply('sort', '2\nnot a number', { mode: 'numeric' }), /All non-empty lines/);
+  assert.throws(() => apply('sort', 'a', { mode: 'missing' }), /Invalid value/);
+  assert.throws(() => apply('sample', 'a\nb', { count: '3' }), /cannot exceed/);
+  assert.throws(() => apply('sample', 'a', { count: '-1' }), /Count/);
 });

@@ -1,55 +1,54 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { branchHistory, historyTarget, MAX_HISTORY_EDITS, retainHistory, restoreHistory } from '../lib/history';
-import { repositoryUrl, repositoryUrlIsPlaceholder } from '../lib/project';
+import { repositoryUrl } from '../lib/project';
 
-test('retém a base e no máximo dez edições mais recentes', () => {
-  const snapshots = retainHistory(Array.from({ length: 42 }, (_, index) => `estado-${index}`));
+test('keeps the base and at most ten recent edits', () => {
+  const snapshots = retainHistory(Array.from({ length: 42 }, (_, index) => `state-${index}`));
   assert.equal(MAX_HISTORY_EDITS, 10);
   assert.equal(snapshots.length, 11);
-  assert.equal(snapshots[0], 'estado-31');
-  assert.equal(snapshots.at(-1), 'estado-41');
+  assert.equal(snapshots[0], 'state-31');
+  assert.equal(snapshots.at(-1), 'state-41');
   assert.equal(retainHistory(snapshots, NaN).length, 11);
 });
 
-test('restauração escolhe um estado válido e rejeita índices fora do histórico', () => {
-  const snapshots = retainHistory(['base', 'um', 'dois']);
-  assert.deepEqual(historyTarget(snapshots, 1), { state: 'um', index: 1 });
+test('restore picks a valid state and rejects out-of-range indexes', () => {
+  const snapshots = retainHistory(['base', 'one', 'two']);
+  assert.deepEqual(historyTarget(snapshots, 1), { state: 'one', index: 1 });
   assert.equal(historyTarget(snapshots, -1), null);
   assert.equal(historyTarget(snapshots, 3), null);
   assert.equal(historyTarget(snapshots, 1.2), null);
-  assert.deepEqual(restoreHistory(snapshots, 2, 1), { states: snapshots, cursor: 1, state: 'um' });
+  assert.deepEqual(restoreHistory(snapshots, 2, 1), { states: snapshots, cursor: 1, state: 'one' });
 });
 
-test('restaurar antes do debounce conserva a edição pendente para refazer', () => {
-  const snapshots = ['base', 'versão um', 'versão dois'];
-  const restored = restoreHistory(snapshots, 2, 1, 'digitação recente')!;
-  assert.equal(restored.state, 'versão um');
+test('restoring before the debounce keeps the pending edit available for redo', () => {
+  const snapshots = ['base', 'version one', 'version two'];
+  const restored = restoreHistory(snapshots, 2, 1, 'recent typing')!;
+  assert.equal(restored.state, 'version one');
   assert.equal(restored.cursor, 1);
-  assert.deepEqual(restored.states, [...snapshots, 'digitação recente']);
-  assert.deepEqual(snapshots, ['base', 'versão um', 'versão dois']);
+  assert.deepEqual(restored.states, [...snapshots, 'recent typing']);
+  assert.deepEqual(snapshots, ['base', 'version one', 'version two']);
 });
 
-test('restaurar com histórico cheio ajusta o cursor e não ultrapassa o limite', () => {
+test('restoring with a full history adjusts the cursor and stays within the limit', () => {
   const snapshots = Array.from({ length: 11 }, (_, index) => ({ text: String(index) }));
-  const restored = restoreHistory(snapshots, 10, 1, { text: 'pendente' })!;
+  const restored = restoreHistory(snapshots, 10, 1, { text: 'pending' })!;
   assert.equal(restored.states.length, 11);
   assert.equal(restored.cursor, 0);
   assert.equal(restored.state.text, '1');
-  assert.equal(restored.states.at(-1)?.text, 'pendente');
-  assert.equal(restoreHistory(snapshots, 10, 0, { text: 'pendente' }), null);
+  assert.equal(restored.states.at(-1)?.text, 'pending');
+  assert.equal(restoreHistory(snapshots, 10, 0, { text: 'pending' }), null);
   assert.equal(restoreHistory(snapshots, 10, -1), null);
 });
 
-test('uma nova edição após restaurar uma versão encerra a ramificação futura', () => {
-  const snapshots = ['base', 'editada', 'limpa'];
+test('a new edit after restoring a version ends the future branch', () => {
+  const snapshots = ['base', 'edited', 'cleaned'];
   const restored = historyTarget(snapshots, 1)!;
-  const next = retainHistory(branchHistory(snapshots, restored.index).concat('nova edição'));
-  assert.deepEqual(next, ['base', 'editada', 'nova edição']);
+  const next = retainHistory(branchHistory(snapshots, restored.index).concat('new edit'));
+  assert.deepEqual(next, ['base', 'edited', 'new edit']);
 });
 
-test('URL do repositório aponta para o GitHub publicado', () => {
+test('repository URL points to the published GitHub repo', () => {
   assert.equal(new URL(repositoryUrl).hostname, 'github.com');
   assert.equal(repositoryUrl, 'https://github.com/fioeditor/TxtUtility');
-  assert.equal(repositoryUrlIsPlaceholder, false);
 });

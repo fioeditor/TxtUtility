@@ -14,12 +14,12 @@ export function findMatches(text: string, query: string, regex: boolean, matchCa
     const pattern = new RegExp(regex ? query : escaped, matchCase ? 'gu' : 'giu');
     const matches: TextRange[] = [];
     for (const match of text.matchAll(pattern)) {
-      if (!match[0].length) throw new Error('A expressão corresponde a trechos vazios. Use um padrão com conteúdo.');
+      if (!match[0].length) throw new Error('The expression matches empty strings. Use a pattern with content.');
       matches.push({ start: match.index, end: match.index + match[0].length });
     }
     return { matches, error: '' };
   } catch (error) {
-    return { matches: [], error: error instanceof Error ? error.message : 'Expressão inválida.' };
+    return { matches: [], error: error instanceof Error ? error.message : 'Invalid expression.' };
   }
 }
 export function replaceLiteralMatches(text: string, matches: TextRange[], replacement: string): string {

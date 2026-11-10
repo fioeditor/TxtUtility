@@ -19,19 +19,19 @@ export const tools: Tool[] = [
   {
     id: 'empty',
     category: 'clean',
-    name: 'Linhas vazias',
-    description: 'Remove linhas vazias ou formadas apenas por espaços.',
+    name: 'Empty lines',
+    description: 'Removes empty lines and lines that contain only whitespace.',
     fields: [],
   },
   {
     id: 'dedupe',
     category: 'clean',
-    name: 'Linhas repetidas',
-    description: 'Remove linhas repetidas, mantendo a primeira ocorrência original.',
+    name: 'Duplicate lines',
+    description: 'Removes duplicate lines, keeping the first occurrence as written.',
     fields: [
       {
         key: 'ignoreCase',
-        label: 'Ignorar maiúsculas/minúsculas',
+        label: 'Ignore case',
         type: 'checkbox',
         defaultValue: 'false',
       },
@@ -40,25 +40,25 @@ export const tools: Tool[] = [
   {
     id: 'dedupeWords',
     category: 'clean',
-    name: 'Palavras repetidas',
-    description: 'Remove palavras repetidas preservando a ordem da primeira ocorrência.',
+    name: 'Duplicate words',
+    description: 'Removes repeated words, keeping the order of their first occurrence.',
     fields: [
       {
         key: 'ignoreCase',
-        label: 'Ignorar maiúsculas/minúsculas',
+        label: 'Ignore case',
         type: 'checkbox',
         defaultValue: 'false',
       },
       {
         key: 'separator',
-        label: 'Separador normalizado',
+        label: 'Normalized separator',
         type: 'text',
         defaultValue: '',
-        placeholder: 'Opcional; deixe vazio para preservar os separadores',
+        placeholder: 'Optional; leave empty to keep the original separators',
       },
       {
         key: 'normalizeSeparator',
-        label: 'Normalizar separador',
+        label: 'Normalize separator',
         type: 'checkbox',
         defaultValue: 'false',
       },
@@ -67,155 +67,155 @@ export const tools: Tool[] = [
   {
     id: 'trim',
     category: 'clean',
-    name: 'Aparar linhas',
-    description: 'Remove espaços no início e no fim de cada linha.',
+    name: 'Trim lines',
+    description: 'Removes leading and trailing whitespace from each line.',
     fields: [],
   },
   {
     id: 'spaces',
     category: 'clean',
-    name: 'Espaços extras',
-    description: 'Converte sequências de espaços e tabulações em um único espaço.',
+    name: 'Extra spaces',
+    description: 'Collapses runs of spaces and tabs into a single space.',
     fields: [],
   },
   {
     id: 'accents',
     category: 'clean',
-    name: 'Remover acentos',
-    description: 'Remove marcas de acentuação sem alterar a ordem do texto.',
+    name: 'Remove accents',
+    description: 'Strips diacritical marks without changing the order of the text.',
     fields: [],
   },
   {
     id: 'punctuation',
     category: 'clean',
-    name: 'Remover pontuação',
-    description: 'Remove caracteres de pontuação Unicode.',
+    name: 'Remove punctuation',
+    description: 'Removes Unicode punctuation characters.',
     fields: [],
   },
   {
     id: 'digits',
     category: 'clean',
-    name: 'Remover números',
-    description: 'Remove caracteres numéricos Unicode.',
+    name: 'Remove numbers',
+    description: 'Removes Unicode numeric characters.',
     fields: [],
   },
   {
     id: 'upper',
     category: 'transform',
-    name: 'Maiúsculas',
-    description: 'Converte o texto para maiúsculas usando a localidade pt-BR.',
+    name: 'Uppercase',
+    description: 'Converts the text to uppercase.',
     fields: [],
   },
   {
     id: 'lower',
     category: 'transform',
-    name: 'Minúsculas',
-    description: 'Converte o texto para minúsculas usando a localidade pt-BR.',
+    name: 'Lowercase',
+    description: 'Converts the text to lowercase.',
     fields: [],
   },
   {
     id: 'title',
     category: 'transform',
-    name: 'Título',
-    description: 'Coloca a inicial de cada palavra em maiúscula.',
+    name: 'Title case',
+    description: 'Capitalizes the first letter of each word.',
     fields: [],
   },
   {
     id: 'sentence',
     category: 'transform',
-    name: 'Frases',
-    description: 'Converte o texto para caixa de frase.',
+    name: 'Sentence case',
+    description: 'Converts the text to sentence case.',
     fields: [],
   },
   {
     id: 'reverseText',
     category: 'transform',
-    name: 'Inverter texto',
-    description: 'Inverte caracteres Unicode do texto.',
+    name: 'Reverse text',
+    description: 'Reverses the Unicode characters of the text.',
     fields: [],
   },
   {
     id: 'affix',
     category: 'transform',
-    name: 'Prefixo e sufixo',
-    description: 'Adiciona prefixo e sufixo a cada linha não vazia.',
+    name: 'Prefix and suffix',
+    description: 'Adds a prefix and a suffix to each non-empty line.',
     fields: [
       {
         key: 'prefix',
-        label: 'Prefixo',
+        label: 'Prefix',
         type: 'text',
         defaultValue: '',
-        placeholder: 'Texto antes de cada linha',
+        placeholder: 'Text before each line',
       },
       {
         key: 'suffix',
-        label: 'Sufixo',
+        label: 'Suffix',
         type: 'text',
         defaultValue: '',
-        placeholder: 'Texto depois de cada linha',
+        placeholder: 'Text after each line',
       },
     ],
   },
   {
     id: 'number',
     category: 'transform',
-    name: 'Numerar linhas',
-    description: 'Numera as linhas com início, passo, preenchimento e separador configuráveis.',
+    name: 'Number lines',
+    description: 'Numbers the lines with a configurable start, step, padding and separator.',
     fields: [
       {
         key: 'start',
-        label: 'Início',
+        label: 'Start',
         type: 'number',
         defaultValue: '1',
-        placeholder: 'Ex.: 1',
+        placeholder: 'e.g. 1',
       },
       {
         key: 'step',
-        label: 'Passo',
+        label: 'Step',
         type: 'number',
         defaultValue: '1',
-        placeholder: 'Ex.: 1',
+        placeholder: 'e.g. 1',
       },
       {
         key: 'padding',
-        label: 'Zeros à esquerda',
+        label: 'Leading zeros',
         type: 'number',
         defaultValue: '0',
-        placeholder: 'Ex.: 3',
+        placeholder: 'e.g. 3',
       },
       {
         key: 'separator',
-        label: 'Separador',
+        label: 'Separator',
         type: 'text',
         defaultValue: '. ',
-        placeholder: 'Ex.: ". " ou ") "',
+        placeholder: 'e.g. ". " or ") "',
       },
     ],
   },
   {
     id: 'sort',
     category: 'lines',
-    name: 'Ordenar linhas',
-    description: 'Ordena linhas em ordem alfabética, numérica, por tamanho ou aleatoriamente.',
+    name: 'Sort lines',
+    description: 'Sorts lines alphabetically, numerically, by length or randomly.',
     fields: [
       {
         key: 'mode',
-        label: 'Modo',
+        label: 'Mode',
         type: 'select',
         defaultValue: 'az',
         options: [
           { value: 'az', label: 'A → Z' },
           { value: 'za', label: 'Z → A' },
-          { value: 'numeric', label: 'Numérica' },
-          { value: 'shortest', label: 'Menores primeiro' },
-          { value: 'longest', label: 'Maiores primeiro' },
-          { value: 'reverse', label: 'Inversa' },
-          { value: 'shuffle', label: 'Aleatória' },
+          { value: 'numeric', label: 'Numeric' },
+          { value: 'shortest', label: 'Shortest first' },
+          { value: 'longest', label: 'Longest first' },
+          { value: 'reverse', label: 'Reversed' },
+          { value: 'shuffle', label: 'Random' },
         ],
       },
       {
         key: 'ignoreCase',
-        label: 'Ignorar maiúsculas/minúsculas',
+        label: 'Ignore case',
         type: 'checkbox',
         defaultValue: 'false',
       },
@@ -224,47 +224,47 @@ export const tools: Tool[] = [
   {
     id: 'filter',
     category: 'lines',
-    name: 'Remover ou manter linhas',
-    description: 'Remove ou mantém linhas que contêm um termo, começam ou terminam com ele, ou são iguais. Em regex, a expressão define o critério.',
+    name: 'Remove or keep lines',
+    description: 'Removes or keeps lines that contain a term, start or end with it, or match it exactly. With regex, the expression defines the criterion.',
     fields: [
       {
         key: 'term',
-        label: 'Texto a procurar',
+        label: 'Text to find',
         type: 'text',
         defaultValue: '',
-        placeholder: 'Digite o que procurar',
+        placeholder: 'Type what to look for',
       },
       {
         key: 'mode',
-        label: 'Ação',
+        label: 'Action',
         type: 'select',
         defaultValue: 'remove',
         options: [
-          { value: 'remove', label: 'Remover linhas correspondentes' },
-          { value: 'keep', label: 'Manter apenas correspondentes' },
+          { value: 'remove', label: 'Remove matching lines' },
+          { value: 'keep', label: 'Keep only matching lines' },
         ],
       },
       {
         key: 'matchType',
-        label: 'Critério para texto literal',
+        label: 'Match type (literal text)',
         type: 'select',
         defaultValue: 'contains',
         options: [
-          { value: 'contains', label: 'Contém o texto' },
-          { value: 'starts', label: 'Começa com o texto' },
-          { value: 'ends', label: 'Termina com o texto' },
-          { value: 'exact', label: 'Linha exatamente igual' },
+          { value: 'contains', label: 'Contains the text' },
+          { value: 'starts', label: 'Starts with the text' },
+          { value: 'ends', label: 'Ends with the text' },
+          { value: 'exact', label: 'Line is exactly the text' },
         ],
       },
       {
         key: 'regex',
-        label: 'Usar expressão regular',
+        label: 'Use regular expression',
         type: 'checkbox',
         defaultValue: 'false',
       },
       {
         key: 'ignoreCase',
-        label: 'Ignorar maiúsculas/minúsculas',
+        label: 'Ignore case',
         type: 'checkbox',
         defaultValue: 'false',
       },
@@ -273,82 +273,82 @@ export const tools: Tool[] = [
   {
     id: 'split',
     category: 'lines',
-    name: 'Dividir por delimitador',
-    description: 'Divide o texto por um delimitador literal e transforma as partes em linhas.',
+    name: 'Split by delimiter',
+    description: 'Splits the text on a literal delimiter and turns the parts into lines.',
     fields: [
       {
         key: 'delimiter',
-        label: 'Delimitador',
+        label: 'Delimiter',
         type: 'text',
         defaultValue: ',',
-        placeholder: 'Também aceita \\n e \\t',
+        placeholder: 'Also accepts \\n and \\t',
       },
     ],
   },
   {
     id: 'join',
     category: 'lines',
-    name: 'Juntar linhas',
-    description: 'Junta linhas usando um delimitador literal.',
+    name: 'Join lines',
+    description: 'Joins lines with a literal delimiter.',
     fields: [
       {
         key: 'delimiter',
-        label: 'Delimitador',
+        label: 'Delimiter',
         type: 'text',
         defaultValue: ', ',
-        placeholder: 'Também aceita \\n e \\t',
+        placeholder: 'Also accepts \\n and \\t',
       },
     ],
   },
   {
     id: 'column',
     category: 'lines',
-    name: 'Extrair coluna',
-    description: 'Extrai uma coluna 1-based de cada linha usando um delimitador literal.',
+    name: 'Extract column',
+    description: 'Extracts a 1-based column from each line using a literal delimiter.',
     fields: [
       {
         key: 'delimiter',
-        label: 'Delimitador',
+        label: 'Delimiter',
         type: 'text',
         defaultValue: ',',
-        placeholder: 'Também aceita \\n e \\t',
+        placeholder: 'Also accepts \\n and \\t',
       },
       {
         key: 'index',
-        label: 'Índice da coluna',
+        label: 'Column index',
         type: 'number',
         defaultValue: '1',
-        placeholder: 'Começa em 1',
+        placeholder: 'Starts at 1',
       },
     ],
   },
   {
     id: 'compare',
     category: 'lists',
-    name: 'Comparar listas',
-    description: 'Calcula interseção, diferença ou união preservando a ordem.',
+    name: 'Compare lists',
+    description: 'Computes the intersection, difference or union, preserving order.',
     fields: [
       {
         key: 'other',
-        label: 'Segundo texto',
+        label: 'Second text',
         type: 'textarea',
         defaultValue: '',
-        placeholder: 'Uma entrada por linha',
+        placeholder: 'One entry per line',
       },
       {
         key: 'mode',
-        label: 'Operação',
+        label: 'Operation',
         type: 'select',
         defaultValue: 'intersection',
         options: [
-          { value: 'intersection', label: 'Interseção' },
-          { value: 'difference', label: 'Diferença (primeiro texto)' },
-          { value: 'union', label: 'União' },
+          { value: 'intersection', label: 'Intersection' },
+          { value: 'difference', label: 'Difference (first text)' },
+          { value: 'union', label: 'Union' },
         ],
       },
       {
         key: 'ignoreCase',
-        label: 'Ignorar maiúsculas/minúsculas',
+        label: 'Ignore case',
         type: 'checkbox',
         defaultValue: 'false',
       },
@@ -357,37 +357,37 @@ export const tools: Tool[] = [
   {
     id: 'merge',
     category: 'lists',
-    name: 'Mesclar listas',
-    description: 'Mescla o primeiro e o segundo texto linha a linha.',
+    name: 'Merge lists',
+    description: 'Merges the first and second text line by line.',
     fields: [
       {
         key: 'other',
-        label: 'Segundo texto',
+        label: 'Second text',
         type: 'textarea',
         defaultValue: '',
-        placeholder: 'Uma entrada por linha',
+        placeholder: 'One entry per line',
       },
       {
         key: 'separator',
-        label: 'Separador',
+        label: 'Separator',
         type: 'text',
         defaultValue: ' | ',
-        placeholder: 'Também aceita \\n e \\t',
+        placeholder: 'Also accepts \\n and \\t',
       },
     ],
   },
   {
     id: 'sample',
     category: 'lists',
-    name: 'Amostra aleatória',
-    description: 'Seleciona linhas aleatórias sem reposição.',
+    name: 'Random sample',
+    description: 'Picks random lines without replacement.',
     fields: [
       {
         key: 'count',
-        label: 'Quantidade',
+        label: 'Count',
         type: 'number',
         defaultValue: '1',
-        placeholder: 'Número de linhas',
+        placeholder: 'Number of lines',
       },
     ],
   },
@@ -407,25 +407,25 @@ function error(message: string): never {
 }
 
 function requireString(value: unknown, label: string): string {
-  if (typeof value !== 'string') error(`${label} deve ser um texto.`);
+  if (typeof value !== 'string') error(`${label} must be a string.`);
   return value;
 }
 
 function getTool(id: string): Tool {
   const tool = tools.find((candidate) => candidate.id === id);
-  if (!tool) error(`Operação desconhecida: ${String(id)}.`);
+  if (!tool) error(`Unknown operation: ${String(id)}.`);
   return tool;
 }
 
 function prepareOptions(tool: Tool, supplied: unknown): Options {
   if (supplied === null || typeof supplied !== 'object' || Array.isArray(supplied)) {
-    error('As opções devem ser um objeto de textos.');
+    error('Options must be an object of strings.');
   }
   const source = supplied as Record<string, unknown>;
   const known = new Set(tool.fields.map((field) => field.key));
   for (const key of Object.keys(source)) {
-    if (!known.has(key)) error(`Opção desconhecida para ${tool.id}: ${key}.`);
-    if (typeof source[key] !== 'string') error(`A opção "${key}" deve ser um texto.`);
+    if (!known.has(key)) error(`Unknown option for ${tool.id}: ${key}.`);
+    if (typeof source[key] !== 'string') error(`Option "${key}" must be a string.`);
   }
   const values: Options = {};
   for (const field of tool.fields) {
@@ -434,13 +434,13 @@ function prepareOptions(tool: Tool, supplied: unknown): Options {
       : source[field.key] as string;
     if (field.type === 'checkbox') {
       if (values[field.key] !== 'true' && values[field.key] !== 'false') {
-        error(`A opção "${field.key}" deve ser true ou false.`);
+        error(`Option "${field.key}" must be true or false.`);
       }
     }
     if (field.type === 'select') {
       const allowed = field.options?.map((option) => option.value) ?? [];
       if (!allowed.includes(values[field.key])) {
-        error(`Valor inválido para a opção "${field.key}".`);
+        error(`Invalid value for option "${field.key}".`);
       }
     }
   }
@@ -454,17 +454,17 @@ function booleanOption(options: Options, key: string): boolean {
 function parseFiniteNumber(value: string, label: string): number {
   const normalized = value.trim().replace(',', '.');
   if (normalized.length === 0 || !/^[+-]?(?:(?:\d+(?:\.\d*)?)|(?:\.\d+))$/.test(normalized)) {
-    error(`${label} deve ser um número válido.`);
+    error(`${label} must be a valid number.`);
   }
   const parsed = Number(normalized);
-  if (!Number.isFinite(parsed)) error(`${label} deve ser um número finito.`);
+  if (!Number.isFinite(parsed)) error(`${label} must be a finite number.`);
   return parsed;
 }
 
 function parseInteger(value: string, label: string, maximum = MAX_ITEMS): number {
   const parsed = parseFiniteNumber(value, label);
   if (!Number.isSafeInteger(parsed) || parsed < 0 || parsed > maximum) {
-    error(`${label} deve ser um inteiro entre 0 e ${maximum}.`);
+    error(`${label} must be an integer between 0 and ${maximum}.`);
   }
   return parsed;
 }
@@ -492,7 +492,7 @@ function decodeEscapes(value: string): string {
 
 function delimiterOption(options: Options): string {
   const delimiter = decodeEscapes(options.delimiter);
-  if (delimiter.length === 0) error('O delimitador não pode ser vazio.');
+  if (delimiter.length === 0) error('The delimiter cannot be empty.');
   return delimiter;
 }
 
@@ -508,8 +508,8 @@ function joinLines(lines: string[], trailingNewline: boolean): string {
   return lines.join('\n') + (trailingNewline ? '\n' : '');
 }
 
-function checkItemLimit(count: number, label = 'A operação'): void {
-  if (count > MAX_ITEMS) error(`${label} aceita no máximo ${MAX_ITEMS.toLocaleString('pt-BR')} itens.`);
+function checkItemLimit(count: number, label = 'The operation'): void {
+  if (count > MAX_ITEMS) error(`${label} supports at most ${MAX_ITEMS.toLocaleString('en-US')} items.`);
 }
 
 function result(text: string, detail: string): Result {
@@ -517,24 +517,24 @@ function result(text: string, detail: string): Result {
 }
 
 function localeLower(value: string): string {
-  return value.toLocaleLowerCase('pt-BR');
+  return value.toLocaleLowerCase();
 }
 
 function localeUpper(value: string): string {
-  return value.toLocaleUpperCase('pt-BR');
+  return value.toLocaleUpperCase();
 }
 
 function removeBlankLines(text: string): Result {
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A limpeza');
+  checkItemLimit(state.lines.length, 'Cleanup');
   const lines = state.lines.filter((line) => line.trim().length > 0);
   const removed = state.lines.length - lines.length;
-  return result(joinLines(lines, state.trailingNewline && lines.length > 0), `${removed} ${removed === 1 ? 'linha vazia removida' : 'linhas vazias removidas'}.`);
+  return result(joinLines(lines, state.trailingNewline && lines.length > 0), `${removed} ${removed === 1 ? 'empty line removed' : 'empty lines removed'}.`);
 }
 
 function dedupeLines(text: string, ignoreCase: boolean): Result {
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A limpeza');
+  checkItemLimit(state.lines.length, 'Cleanup');
   const seen = new Set<string>();
   const lines: string[] = [];
   for (const line of state.lines) {
@@ -546,7 +546,7 @@ function dedupeLines(text: string, ignoreCase: boolean): Result {
     }
   }
   const removed = state.lines.length - lines.length;
-  return result(joinLines(lines, state.trailingNewline && lines.length > 0), `${removed} ${removed === 1 ? 'linha repetida removida' : 'linhas repetidas removidas'}.`);
+  return result(joinLines(lines, state.trailingNewline && lines.length > 0), `${removed} ${removed === 1 ? 'duplicate line removed' : 'duplicate lines removed'}.`);
 }
 
 function dedupeWords(text: string, ignoreCase: boolean, separator: string, normalizeSeparator: boolean): Result {
@@ -567,10 +567,10 @@ function dedupeWords(text: string, ignoreCase: boolean, separator: string, norma
       kept.push(match);
     }
   }
-  if (duplicateRanges.length === 0) return result(text, 'Nenhuma palavra repetida encontrada.');
+  if (duplicateRanges.length === 0) return result(text, 'No duplicate words found.');
   const decodedSeparator = decodeEscapes(separator);
   if (normalizeSeparator || decodedSeparator.length > 0) {
-    return result(kept.map((match) => match[0]).join(decodedSeparator || ' '), `${duplicateRanges.length} ${duplicateRanges.length === 1 ? 'palavra repetida removida' : 'palavras repetidas removidas'}.`);
+    return result(kept.map((match) => match[0]).join(decodedSeparator || ' '), `${duplicateRanges.length} ${duplicateRanges.length === 1 ? 'duplicate word removed' : 'duplicate words removed'}.`);
   }
   let output = text;
   for (let index = duplicateRanges.length - 1; index >= 0; index -= 1) {
@@ -582,7 +582,7 @@ function dedupeWords(text: string, ignoreCase: boolean, separator: string, norma
     .replace(/[ \t]+\n/g, '\n')
     .replace(/\n[ \t]+/g, '\n')
     .replace(/[ \t]+$/g, '');
-  return result(output, `${duplicateRanges.length} ${duplicateRanges.length === 1 ? 'palavra repetida removida' : 'palavras repetidas removidas'}.`);
+  return result(output, `${duplicateRanges.length} ${duplicateRanges.length === 1 ? 'duplicate word removed' : 'duplicate words removed'}.`);
 }
 
 function titleCase(text: string): string {
@@ -623,9 +623,9 @@ function sentenceCase(text: string): string {
 
 function affixLines(text: string, prefix: string, suffix: string): Result {
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A aplicação de prefixo e sufixo');
+  checkItemLimit(state.lines.length, 'Prefix and suffix');
   const lines = state.lines.map((line) => line.length > 0 ? prefix + line + suffix : line);
-  return result(joinLines(lines, state.trailingNewline), `${lines.filter((line) => line.length > 0).length} ${lines.filter((line) => line.length > 0).length === 1 ? 'linha ajustada' : 'linhas ajustadas'}.`);
+  return result(joinLines(lines, state.trailingNewline), `${lines.filter((line) => line.length > 0).length} ${lines.filter((line) => line.length > 0).length === 1 ? 'line updated' : 'lines updated'}.`);
 }
 
 function padNumber(value: number, padding: number): string {
@@ -640,18 +640,18 @@ function padNumber(value: number, padding: number): string {
 
 function numberLines(text: string, options: Options): Result {
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A numeração');
-  const start = parseFiniteNumber(options.start, 'Início');
-  const step = parseFiniteNumber(options.step, 'Passo');
-  const padding = parseInteger(options.padding, 'Zeros à esquerda', MAX_PADDING);
+  checkItemLimit(state.lines.length, 'Numbering');
+  const start = parseFiniteNumber(options.start, 'Start');
+  const step = parseFiniteNumber(options.step, 'Step');
+  const padding = parseInteger(options.padding, 'Leading zeros', MAX_PADDING);
   const separator = decodeEscapes(options.separator);
   const lines: string[] = [];
   for (let index = 0; index < state.lines.length; index += 1) {
     const number = start + step * index;
-    if (!Number.isFinite(number)) error('A numeração gerou um valor não finito.');
+    if (!Number.isFinite(number)) error('Numbering produced a non-finite value.');
     lines.push(`${padNumber(number, padding)}${separator}${state.lines[index]}`);
   }
-  return result(joinLines(lines, state.trailingNewline), `${lines.length} ${lines.length === 1 ? 'linha numerada' : 'linhas numeradas'}.`);
+  return result(joinLines(lines, state.trailingNewline), `${lines.length} ${lines.length === 1 ? 'line numbered' : 'lines numbered'}.`);
 }
 
 function numericValue(value: string): number | null {
@@ -663,7 +663,7 @@ function numericValue(value: string): number | null {
 
 function sortLines(text: string, options: Options): Result {
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A ordenação');
+  checkItemLimit(state.lines.length, 'Sorting');
   const mode = options.mode;
   const ignoreCase = booleanOption(options, 'ignoreCase');
   const empty = state.lines.filter((line) => line.trim().length === 0);
@@ -671,20 +671,20 @@ function sortLines(text: string, options: Options): Result {
   if (mode === 'numeric') {
     const parsed = values.map((line) => numericValue(line));
     if (parsed.some((value) => value === null)) {
-      error('Todas as linhas não vazias devem conter números válidos para a ordenação numérica.');
+      error('All non-empty lines must be valid numbers for numeric sorting.');
     }
     values.sort((left, right) => (numericValue(left) as number) - (numericValue(right) as number));
   } else if (mode === 'az' || mode === 'za') {
-    const collator = new Intl.Collator('pt-BR', {
+    const collator = new Intl.Collator(undefined, {
       numeric: true,
       sensitivity: ignoreCase ? 'base' : 'variant',
     });
     values.sort((left, right) => mode === 'az' ? collator.compare(left, right) : collator.compare(right, left));
   } else if (mode === 'shortest') {
-    const collator = new Intl.Collator('pt-BR', { numeric: true, sensitivity: ignoreCase ? 'base' : 'variant' });
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: ignoreCase ? 'base' : 'variant' });
     values.sort((left, right) => Array.from(left).length - Array.from(right).length || collator.compare(left, right));
   } else if (mode === 'longest') {
-    const collator = new Intl.Collator('pt-BR', { numeric: true, sensitivity: ignoreCase ? 'base' : 'variant' });
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: ignoreCase ? 'base' : 'variant' });
     values.sort((left, right) => Array.from(right).length - Array.from(left).length || collator.compare(left, right));
   } else if (mode === 'reverse') {
     values.reverse();
@@ -694,17 +694,17 @@ function sortLines(text: string, options: Options): Result {
       [values[index], values[randomIndex]] = [values[randomIndex], values[index]];
     }
   } else {
-    error('Modo de ordenação inválido.');
+    error('Invalid sort mode.');
   }
   const output = joinLines([...values, ...empty], state.trailingNewline && values.length + empty.length > 0);
-  return result(output, `${values.length} ${values.length === 1 ? 'linha organizada' : 'linhas organizadas'}${empty.length > 0 ? `; ${empty.length} ${empty.length === 1 ? 'linha vazia' : 'linhas vazias'} ao final` : ''}.`);
+  return result(output, `${values.length} ${values.length === 1 ? 'line sorted' : 'lines sorted'}${empty.length > 0 ? `; ${empty.length} ${empty.length === 1 ? 'empty line' : 'empty lines'} moved to the end` : ''}.`);
 }
 
 function filterLines(text: string, options: Options): Result {
   const term = options.term;
-  if (term.length === 0) error('O termo do filtro é obrigatório.');
+  if (term.length === 0) error('The filter term is required.');
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'O filtro');
+  checkItemLimit(state.lines.length, 'The filter');
   const useRegex = booleanOption(options, 'regex');
   const ignoreCase = booleanOption(options, 'ignoreCase');
   let matches: (line: string) => boolean;
@@ -713,8 +713,8 @@ function filterLines(text: string, options: Options): Result {
     try {
       expression = new RegExp(term, ignoreCase ? 'iu' : 'u');
     } catch (caught) {
-      const message = caught instanceof Error ? caught.message : 'sintaxe inválida';
-      error(`Expressão regular inválida: ${message}.`);
+      const message = caught instanceof Error ? caught.message : 'invalid syntax';
+      error(`Invalid regular expression: ${message}.`);
     }
     matches = (line: string) => expression.test(line);
   } else {
@@ -732,39 +732,39 @@ function filterLines(text: string, options: Options): Result {
   const keepMode = options.mode === 'keep';
   const lines = state.lines.filter((line) => keepMode ? matches(line) : !matches(line));
   const removed = state.lines.length - lines.length;
-  return result(joinLines(lines, state.trailingNewline && lines.length > 0), `${removed} ${removed === 1 ? 'linha removida' : 'linhas removidas'} · ${lines.length} ${lines.length === 1 ? 'linha mantida' : 'linhas mantidas'}.`);
+  return result(joinLines(lines, state.trailingNewline && lines.length > 0), `${removed} ${removed === 1 ? 'line removed' : 'lines removed'} · ${lines.length} ${lines.length === 1 ? 'line kept' : 'lines kept'}.`);
 }
 
 function splitText(text: string, options: Options): Result {
   const delimiter = delimiterOption(options);
-  if (text.length === 0) return result('', 'O texto está vazio.');
+  if (text.length === 0) return result('', 'The text is empty.');
   const parts = text.split(delimiter);
-  checkItemLimit(parts.length, 'A divisão');
-  return result(parts.join('\n'), `${parts.length} ${parts.length === 1 ? 'parte encontrada' : 'partes encontradas'}.`);
+  checkItemLimit(parts.length, 'Splitting');
+  return result(parts.join('\n'), `${parts.length} ${parts.length === 1 ? 'part found' : 'parts found'}.`);
 }
 
 function joinText(text: string, options: Options): Result {
   const delimiter = delimiterOption(options);
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A junção');
-  if (state.lines.length === 0) return result('', 'O texto está vazio.');
-  return result(state.lines.join(delimiter), `${state.lines.length} ${state.lines.length === 1 ? 'linha juntada' : 'linhas juntadas'}.`);
+  checkItemLimit(state.lines.length, 'Joining');
+  if (state.lines.length === 0) return result('', 'The text is empty.');
+  return result(state.lines.join(delimiter), `${state.lines.length} ${state.lines.length === 1 ? 'line joined' : 'lines joined'}.`);
 }
 
 function columnText(text: string, options: Options): Result {
   const delimiter = delimiterOption(options);
-  const index = parseInteger(options.index, 'Índice da coluna');
-  if (index < 1) error('Índice da coluna deve ser um inteiro entre 1 e 100000.');
+  const index = parseInteger(options.index, 'Column index');
+  if (index < 1) error('Column index must be an integer between 1 and 100000.');
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A extração de coluna');
+  checkItemLimit(state.lines.length, 'Column extraction');
   const lines = state.lines.map((line) => line.split(delimiter)[index - 1] ?? '');
-  return result(joinLines(lines, state.trailingNewline), `${lines.length} ${lines.length === 1 ? 'linha processada' : 'linhas processadas'}.`);
+  return result(joinLines(lines, state.trailingNewline), `${lines.length} ${lines.length === 1 ? 'line processed' : 'lines processed'}.`);
 }
 
 function compareLists(text: string, options: Options): Result {
   const left = splitLines(text);
   const right = splitLines(options.other);
-  checkItemLimit(left.lines.length + right.lines.length, 'A comparação');
+  checkItemLimit(left.lines.length + right.lines.length, 'Comparison');
   const ignoreCase = booleanOption(options, 'ignoreCase');
   const keyOf = (value: string) => ignoreCase ? localeLower(value) : value;
   const rightSet = new Set(right.lines.map(keyOf));
@@ -802,16 +802,16 @@ function compareLists(text: string, options: Options): Result {
       }
     }
   } else {
-    error('Modo de comparação inválido.');
+    error('Invalid comparison mode.');
   }
   const trailing = output.length > 0 && (left.trailingNewline || (left.lines.length === 0 && right.trailingNewline));
-  return result(joinLines(output, trailing), `${output.length} ${output.length === 1 ? 'linha no resultado' : 'linhas no resultado'}.`);
+  return result(joinLines(output, trailing), `${output.length} ${output.length === 1 ? 'line in result' : 'lines in result'}.`);
 }
 
 function mergeLists(text: string, options: Options): Result {
   const left = splitLines(text);
   const right = splitLines(options.other);
-  checkItemLimit(Math.max(left.lines.length, right.lines.length), 'A mesclagem');
+  checkItemLimit(Math.max(left.lines.length, right.lines.length), 'Merging');
   const separator = decodeEscapes(options.separator);
   const length = Math.max(left.lines.length, right.lines.length);
   const lines: string[] = [];
@@ -819,14 +819,14 @@ function mergeLists(text: string, options: Options): Result {
     lines.push(`${left.lines[index] ?? ''}${separator}${right.lines[index] ?? ''}`);
   }
   const trailing = lines.length > 0 && (left.trailingNewline || (left.lines.length === 0 && right.trailingNewline));
-  return result(joinLines(lines, trailing), `${lines.length} ${lines.length === 1 ? 'linha mesclada' : 'linhas mescladas'}.`);
+  return result(joinLines(lines, trailing), `${lines.length} ${lines.length === 1 ? 'line merged' : 'lines merged'}.`);
 }
 
 function sampleLines(text: string, options: Options): Result {
   const state = splitLines(text);
-  checkItemLimit(state.lines.length, 'A amostra');
-  const count = parseInteger(options.count, 'Quantidade');
-  if (count > state.lines.length) error(`A quantidade da amostra não pode exceder ${state.lines.length}.`);
+  checkItemLimit(state.lines.length, 'Sampling');
+  const count = parseInteger(options.count, 'Count');
+  if (count > state.lines.length) error(`The sample size cannot exceed ${state.lines.length}.`);
   const pool = state.lines.slice();
   const chosen: string[] = [];
   for (let index = 0; index < count; index += 1) {
@@ -834,12 +834,12 @@ function sampleLines(text: string, options: Options): Result {
     chosen.push(pool[randomIndex]);
     pool.splice(randomIndex, 1);
   }
-  return result(joinLines(chosen, chosen.length > 0 && state.trailingNewline), `${chosen.length} ${chosen.length === 1 ? 'linha selecionada' : 'linhas selecionadas'} sem reposição.`);
+  return result(joinLines(chosen, chosen.length > 0 && state.trailingNewline), `${chosen.length} ${chosen.length === 1 ? 'line selected' : 'lines selected'} without replacement.`);
 }
 
 export function runOperation(id: string, text: string, options: Record<string, string>): { text: string; detail: string } {
   const tool = getTool(id);
-  requireString(text, 'O texto de entrada');
+  requireString(text, 'The input text');
   const config = prepareOptions(tool, options);
   switch (id) {
     case 'empty':
@@ -849,25 +849,25 @@ export function runOperation(id: string, text: string, options: Record<string, s
     case 'dedupeWords':
       return dedupeWords(text, booleanOption(config, 'ignoreCase'), config.separator, booleanOption(config, 'normalizeSeparator'));
     case 'trim':
-      return result(joinLines(splitLines(text).lines.map((line) => line.trim()), splitLines(text).trailingNewline), 'Espaços das linhas aparados.');
+      return result(joinLines(splitLines(text).lines.map((line) => line.trim()), splitLines(text).trailingNewline), 'Whitespace trimmed from lines.');
     case 'spaces':
-      return result(text.replace(/[^\S\r\n]+/gu, ' '), 'Espaços consecutivos normalizados.');
+      return result(text.replace(/[^\S\r\n]+/gu, ' '), 'Consecutive spaces collapsed.');
     case 'accents':
-      return result(text.normalize('NFD').replace(/[\p{M}]/gu, ''), 'Acentos removidos.');
+      return result(text.normalize('NFD').replace(/[\p{M}]/gu, ''), 'Accents removed.');
     case 'punctuation':
-      return result(text.replace(/[\p{P}]/gu, ''), 'Pontuação removida.');
+      return result(text.replace(/[\p{P}]/gu, ''), 'Punctuation removed.');
     case 'digits':
-      return result(text.replace(/[\p{N}]/gu, ''), 'Números removidos.');
+      return result(text.replace(/[\p{N}]/gu, ''), 'Numbers removed.');
     case 'upper':
-      return result(localeUpper(text), 'Texto convertido para maiúsculas.');
+      return result(localeUpper(text), 'Text converted to uppercase.');
     case 'lower':
-      return result(localeLower(text), 'Texto convertido para minúsculas.');
+      return result(localeLower(text), 'Text converted to lowercase.');
     case 'title':
-      return result(titleCase(text), 'Texto convertido para caixa de título.');
+      return result(titleCase(text), 'Text converted to title case.');
     case 'sentence':
-      return result(sentenceCase(text), 'Texto convertido para caixa de frase.');
+      return result(sentenceCase(text), 'Text converted to sentence case.');
     case 'reverseText':
-      return result(Array.from(text).reverse().join(''), 'Texto invertido.');
+      return result(Array.from(text).reverse().join(''), 'Text reversed.');
     case 'affix':
       return affixLines(text, config.prefix, config.suffix);
     case 'number':
@@ -889,6 +889,6 @@ export function runOperation(id: string, text: string, options: Record<string, s
     case 'sample':
       return sampleLines(text, config);
     default:
-      return error(`Operação desconhecida: ${id}.`);
+      return error(`Unknown operation: ${id}.`);
   }
 }

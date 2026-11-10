@@ -1,6 +1,19 @@
 {
   "name": "textutility",
-  "version": "2.0.0",
+  "version": "0.1.0",
+  "description": "A batch text editor that runs entirely in your browser.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fioeditor/TxtUtility.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fioeditor/TxtUtility/issues"
+  },
+  "homepage": "https://github.com/fioeditor/TxtUtility#readme",
+  "engines": {
+    "node": ">=22"
+  },
   "private": true,
   "packageManager": "npm@11.19.1",
   "scripts": {

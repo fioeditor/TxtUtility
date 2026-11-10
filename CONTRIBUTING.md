@@ -1,17 +1,17 @@
-# Contribuindo com o TextUtility
+# Contributing to TextUtility
 
-Obrigado por ajudar a melhorar uma ferramenta de texto local e aberta a contribuições. Esta política ainda não autoriza redistribuição: a licença será escolhida pelo mantenedor.
+Thanks for helping improve a local, open text tool. By contributing, you agree that your changes are released under the project's [MIT license](LICENSE).
 
-## Começar
+## Getting started
 
-Use Node.js 22 ou superior e npm. Instale dependências com `npm ci`. Para executar localmente use `npm run dev`. Antes de propor uma alteração, rode `npm test`, `npm run typecheck` e `npm run build`.
+Use Node.js 22 or newer and npm. Install dependencies with `npm ci` and run the app locally with `npm run dev`. Before proposing a change, run `npm test`, `npm run typecheck` and `npm run build`.
 
-## Mudanças
+## Making changes
 
-Prefira operações puras em `lib/operations.ts`, isoladas e testadas em `tests/`. Não envie o texto editado a endpoints nem acrescente analytics que leiam o conteúdo. Mantenha navegação acessível por teclado, rótulos claros, operação reversível e `prefers-reduced-motion`. Confirme antes de uma ação que possa substituir o conteúdo do editor.
+Prefer pure operations in `lib/operations.ts`, isolated and tested in `tests/`. Do not send the edited text to any endpoint, and do not add analytics that read it. Keep keyboard navigation accessible, labels clear, operations reversible and `prefers-reduced-motion` respected. Ask for confirmation before any action that could replace the editor content.
 
-Pull requests devem explicar o caso de uso, descrever comportamento/limites novos e incluir testes para a transformação. Não inclua arquivos de rascunho, saída de build, `.env`, credenciais ou conteúdo real de usuários.
+Pull requests should explain the use case, describe new behavior or limits, and include tests for the transformation. Do not include scratch files, build output, `.env` files, credentials or real user content.
 
-## Ambiente local
+## Local environment
 
-Copie `.env.example` para `.env` se quiser overrides. Nunca faça commit de `.env`, credenciais ou conteúdo real de usuários. Escolha e adicione a licença apropriada antes de chamar o projeto de licenciado ou aceitar redistribuição.
+Copy `.env.example` to `.env` only if you need to override the dev server port. Never commit `.env`, credentials or real user content.

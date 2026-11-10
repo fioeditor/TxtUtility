@@ -1,27 +1,81 @@
 # TextUtility
 
-Ferramenta local de edição em lote para limpar, transformar, ordenar, filtrar e comparar texto. A interface é em português; o conteúdo editado fica no navegador.
+A batch text editor that runs entirely in your browser. Clean, transform, sort, filter and compare lists of text without sending anything to a server.
 
-> Repositório: [github.com/fioeditor/TxtUtility](https://github.com/fioeditor/TxtUtility). A licença continua pendente de escolha do mantenedor.
+Source: [github.com/fioeditor/TxtUtility](https://github.com/fioeditor/TxtUtility)
 
-## Começar
+## Features
 
-Requer Node.js 22+ e npm. Instale com `npm ci` e inicie com `npm run dev`. No ambiente Manus, o Preview usa a porta declarada para a sessão. Nenhuma API, conta ou banco é necessário.
+- **23 tools** in four categories: clean, transform, lines and lists.
+- **Task search** (`Ctrl+K`): type what you want to do, for example "remove lines containing", and jump to the right tool.
+- **Result preview** before anything is applied, on the whole text or on the current selection.
+- **Undo, redo and restore** for the ten most recent edits.
+- **Find and replace** with regular expression and case options.
+- **Import** `.txt` and `.csv` files (UTF-8), **copy** or **download** the result.
+- No account, no API, no database. Nothing to configure.
 
-Antes de enviar alterações, rode `npm test`, `npm run typecheck` e `npm run build`. A exportação estática vai para `out/`; o workflow `.github/workflows/ci.yml` roda as mesmas verificações em push e pull request. Veja [CONTRIBUTING.md](CONTRIBUTING.md) para as práticas de contribuição.
+## Tools
 
-## Ferramentas
+| Category | Tools |
+| --- | --- |
+| Clean | Empty lines, Duplicate lines, Duplicate words, Trim lines, Extra spaces, Remove accents, Remove punctuation, Remove numbers |
+| Transform | Uppercase, Lowercase, Title case, Sentence case, Reverse text, Prefix and suffix, Number lines |
+| Lines | Sort lines, Remove or keep lines, Split by delimiter, Join lines, Extract column |
+| Lists | Compare lists (intersection, difference, union), Merge lists, Random sample |
 
-A barra de busca encontra ações por nome ou tarefa; `Ctrl+K` abre a busca. Os atalhos da categoria ativa ficam visíveis abaixo das categorias. As operações abrangem limpeza de linhas e palavras, transformações de caixa, afixos, numeração, ordenação, filtros, divisão/junção, extração e operações entre listas.
+"Remove or keep lines" filters by lines that contain a term, start or end with it, or match it exactly. It also accepts a regular expression.
 
-O filtro de linhas permite **remover** ou **manter** linhas que contêm um termo, começam/terminam com ele ou correspondem exatamente. Também aceita regex e diferenciação de caixa. Pré-visualização, seleção, undo/redo e **restauração das dez edições mais recentes** estão disponíveis no editor.
+## Getting started
 
-Importe `.txt` ou `.csv` em UTF-8 ou cole texto. Importar e carregar um exemplo pedem confirmação antes de substituir um texto não vazio. CSV é tratado como texto delimitado; a extração de coluna não interpreta campos CSV entre aspas nem campos multilinha. Arquivos importados têm limite de 4 MB; o texto processado, de 2 milhões de unidades UTF-16. Expressões regulares seguem JavaScript. A substituição da busca é literal e não expande `$1` ou grupos similares.
+Requires Node.js 22 or newer and npm.
 
-## Privacidade e armazenamento
+```bash
+npm ci
+npm run dev
+```
 
-Transformações e importação rodam no cliente; o conteúdo não é enviado a um servidor do TextUtility. O rascunho atual persiste em `localStorage` neste navegador. O histórico de até dez edições é transitório, vale para a sessão e não é salvo. O carregamento de fontes do Google pode gerar uma requisição ao Google Fonts; os textos do usuário não fazem parte dessa requisição.
+Then open <http://localhost:3000>.
 
-## Repositório e licença
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Build a static export into `out/` |
+| `npm test` | Run the unit tests |
+| `npm run typecheck` | Type-check the project |
 
-O código está em [fioeditor/TxtUtility](https://github.com/fioeditor/TxtUtility). Copie `.env.example` para `.env` se precisar de overrides locais; o `.env` não entra no Git. Escolha e adicione a licença adequada antes de tratar o projeto como redistribuível.
+## Privacy
+
+Transformations and file imports run on the client. Your text is never sent to a server.
+
+- The current draft is kept in this browser's `localStorage`.
+- The edit history (up to ten edits) lives only in the session and is not saved.
+- The stylesheet loads Geist and IBM Plex Mono from Google Fonts, which can cause a request to Google. Your text is not part of that request.
+
+## Limits
+
+- Imported files are limited to 4 MB. Processed text is limited to 2 million UTF-16 code units.
+- Regular expressions follow JavaScript syntax.
+- Find and replace is literal: `$1` and similar group references are not expanded.
+- CSV is treated as delimited text. Column extraction does not parse quoted fields or multiline fields.
+
+## Project structure
+
+```
+app/                Next.js App Router entry: layout, page, global styles
+components/
+  workspace.tsx     The editor UI
+lib/
+  operations.ts     Tool catalog and pure text operations
+  discovery.ts      Task search over the catalog
+  editor.ts         Find, replace and selection helpers
+  history.ts        Undo and restore history
+tests/              Unit tests (node:test, run with tsx)
+```
+
+## Contributing
+
+Contributions are welcome. New operations belong in `lib/operations.ts` with tests in `tests/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks to run before opening a pull request.
+
+## License
+
+[MIT](LICENSE)

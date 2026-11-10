@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'TextUtility — editor de texto em lote',
-  description: 'Limpe, transforme, ordene e compare texto diretamente no navegador. Sem conta; o conteúdo fica no seu dispositivo.',
+  title: 'TextUtility — batch text editor',
+  description: 'Clean, transform, sort and compare text right in your browser. No account needed; your text stays on your device.',
   applicationName: 'TextUtility',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body>{children}</body></html>;
+  return <html lang="en"><body>{children}</body></html>;
 }
