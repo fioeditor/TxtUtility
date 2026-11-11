@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { clampRange, replaceRange, findMatches, replaceLiteralMatches, lineWindow } from '../lib/editor';
+import { clampRange, replaceRange, findMatches, replaceLiteralMatches, lineWindow, EDITOR_LINE_HEIGHT } from '../lib/editor';
 
 test('literal search escapes regex characters and respects case', () => {
   assert.equal(findMatches('a.b aXb A.B', 'a.b', false, false).matches.length, 2);
@@ -24,10 +24,10 @@ test('selection stays within the document and applies only to its range', () => 
   assert.equal(replaceRange('one two three', {start:4,end:7}, 'TWO'), 'one TWO three');
 });
 test('virtual line gutter numbers long documents without rendering every line', () => {
-  const window = lineWindow(20_000, 10_000 * 24);
+  const window = lineWindow(20_000, 10_000 * EDITOR_LINE_HEIGHT);
   assert.equal(window.first, 9_995);
   assert.equal(window.count, 300);
-  assert.equal(window.offset, -120);
+  assert.equal(window.offset, -5 * EDITOR_LINE_HEIGHT);
   assert.equal(lineWindow(1,0).count,1);
   assert.equal(lineWindow(0,0).count,1);
 });

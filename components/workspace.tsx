@@ -2,14 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowDown, ArrowUp, Check, ChevronDown, Copy, Download, FileText, History, Import, ListFilter, LockKeyhole, Maximize2, Minimize2, RotateCcw, Search, Eraser, Trash2, Undo2, Redo2, X, Settings2, ListOrdered, Layers, Keyboard, WrapText } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, ChevronDown, Copy, Download, FileText, History, Import, ListFilter, LockKeyhole, Maximize2, Minimize2, Moon, RotateCcw, Search, Eraser, Sun, Trash2, Undo2, Redo2, X, Settings2, ListOrdered, Layers, Keyboard, WrapText } from 'lucide-react';
 import { tools, runOperation, type Tool } from '@/lib/operations';
-import { clampRange, replaceRange, findMatches, replaceLiteralMatches, lineWindow } from '@/lib/editor';
+import { clampRange, replaceRange, findMatches, replaceLiteralMatches, lineWindow, EDITOR_LINE_HEIGHT } from '@/lib/editor';
 import { searchTools, type OperationResult } from '@/lib/discovery';
 import { branchHistory, restoreHistory, MAX_HISTORY_EDITS, retainHistory } from '@/lib/history';
 import { repositoryUrl } from '@/lib/project';
 
 const KEY = 'textutility.draft.v1';
+const THEME_KEY = 'textutility.theme';
 const MAX_TEXT = 2_000_000;
 const EXAMPLE_LABEL = 'Load example';
 const categories = [
@@ -60,9 +61,19 @@ export default function Workspace() {
   const search = useRef<HTMLInputElement>(null);
   const file = useRef<HTMLInputElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
+  const [theme, setTheme] = useState<'light' | 'dark' | null>(null);
   const source = scope === 'selection' ? text.slice(selection.start, selection.end) : text;
   const hasSelection = selection.end > selection.start;
 
+  useEffect(() => {
+    const stored = document.documentElement.dataset.theme;
+    setTheme(stored === 'dark' ? 'dark' : 'light');
+  }, []);
+  function applyTheme(next: 'light' | 'dark') {
+    setTheme(next);
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(THEME_KEY, next); } catch { /* theme stays for this view */ }
+  }
   useEffect(() => {
     let draft = '';
     try { draft = localStorage.getItem(KEY)?.slice(0, MAX_TEXT) ?? ''; } catch { setSaved('Saving unavailable'); }
@@ -174,7 +185,7 @@ export default function Workspace() {
     if (!finder.matches.length) return;
     const index = activeMatch < 0 ? (direction > 0 ? 0 : finder.matches.length - 1) : (activeMatch + direction + finder.matches.length) % finder.matches.length;
     const match = finder.matches[index]; setActiveMatch(index); editor.current?.focus(); editor.current?.setSelectionRange(match.start, match.end); setSelection(match);
-    if (editor.current && !wrap) { editor.current.scrollTop = Math.max(0, text.slice(0, match.start).split('\n').length * 24 - editor.current.clientHeight / 2); setScrollTop(editor.current.scrollTop); }
+    if (editor.current && !wrap) { editor.current.scrollTop = Math.max(0, text.slice(0, match.start).split('\n').length * EDITOR_LINE_HEIGHT - editor.current.clientHeight / 2); setScrollTop(editor.current.scrollTop); }
   }
   function replace(all: boolean) {
     if (!finder.matches.length) return;
@@ -211,8 +222,18 @@ export default function Workspace() {
   return <div className={`app-shell ${expanded ? 'is-expanded' : ''}`}>
     <a className="skip-link" href="#main-editor">Skip to editor</a>
     <header className="site-header">
-      <a href="/" className="wordmark" aria-label="TextUtility home"><span className="logo-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14M5 12h9M5 18h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg></span>TextUtility</a>
-      <div className="header-right"><a className="source-link" href={repositoryUrl} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer" aria-label="TextUtility on GitHub"><GithubIcon/><span>GitHub</span></a><button className="help-button" onClick={() => setHelpOpen(!helpOpen)} aria-expanded={helpOpen}><Keyboard size={16}/><span>Shortcuts</span></button></div>
+      <div className="brand">
+        <a href="/" className="wordmark" aria-label="TextUtility home"><span className="logo-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 6h14M5 12h9M5 18h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg></span>TextUtility</a>
+        <a className="oss-badge" href={repositoryUrl} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer"><span className="oss-dot" aria-hidden="true"/>Open source</a>
+      </div>
+      <div className="header-right">
+        <div className="theme-switch" role="group" aria-label="Color mode">
+          <button type="button" aria-pressed={theme === 'light'} aria-label="Light mode" onClick={() => applyTheme('light')}><Sun size={16} aria-hidden="true"/><span>Light</span></button>
+          <button type="button" aria-pressed={theme === 'dark'} aria-label="Night mode" onClick={() => applyTheme('dark')}><Moon size={16} aria-hidden="true"/><span>Night</span></button>
+        </div>
+        <a className="source-link" href={repositoryUrl} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer" aria-label="TextUtility on GitHub"><GithubIcon/><span>GitHub</span></a>
+        <button className="help-button" onClick={() => setHelpOpen(!helpOpen)} aria-expanded={helpOpen}><Keyboard size={16}/><span>Shortcuts</span></button>
+      </div>
     </header>
     {helpOpen && <section className="shortcuts" aria-label="Shortcuts"><span><kbd>Ctrl F</kbd> Find in text</span><span><kbd>Ctrl K</kbd> Find a tool</span><span><kbd>Ctrl Z</kbd> Undo</span><span><kbd>Ctrl Shift Z</kbd> Redo</span><span><kbd>Ctrl S</kbd> Download (in editor)</span><button aria-label="Close shortcuts" onClick={() => setHelpOpen(false)}><X size={15}/></button></section>}
     <main className="main-content">

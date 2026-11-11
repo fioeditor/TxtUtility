@@ -1,5 +1,7 @@
 # TextUtility
 
+![TextUtility: open source badge, light and night modes, and a duplicate-line cleanup](docs/preview.gif)
+
 A batch text editor that runs entirely in your browser. Clean, transform, sort, filter and compare lists of text without sending anything to a server.
 
 Link: https://textutilities.tech
@@ -48,6 +50,7 @@ Then open <http://localhost:3000>.
 Transformations and file imports run on the client. Your text is never sent to a server.
 
 - The current draft is kept in this browser's `localStorage`.
+- The light or night mode choice is kept in the same browser.
 - The edit history (up to ten edits) lives only in the session and is not saved.
 - The stylesheet loads Geist and IBM Plex Mono from Google Fonts, which can cause a request to Google. Your text is not part of that request.
 

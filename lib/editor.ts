@@ -27,7 +27,9 @@ export function replaceLiteralMatches(text: string, matches: TextRange[], replac
   for (const match of [...matches].reverse()) output = replaceRange(output, match, replacement);
   return output;
 }
+/** Matches the editor line box in app/globals.css (.line-gutter / textarea). */
+export const EDITOR_LINE_HEIGHT = 26;
 export function lineWindow(total: number, scrollTop: number): { first: number; count: number; offset: number } {
-  const first = Math.max(0, Math.floor(scrollTop / 24) - 5);
-  return { first, count: Math.max(0, Math.min(300, Math.max(1, total) - first)), offset: first * 24 - scrollTop };
+  const first = Math.max(0, Math.floor(scrollTop / EDITOR_LINE_HEIGHT) - 5);
+  return { first, count: Math.max(0, Math.min(300, Math.max(1, total) - first)), offset: first * EDITOR_LINE_HEIGHT - scrollTop };
 }
