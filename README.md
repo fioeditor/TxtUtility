@@ -2,7 +2,7 @@
 
 A batch text editor that runs entirely in your browser. Clean, transform, sort, filter and compare lists of text without sending anything to a server.
 
-Source: [github.com/fioeditor/TxtUtility](https://github.com/fioeditor/TxtUtility)
+Link: https://textutilities.tech
 
 ## Features
 
