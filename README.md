@@ -1,6 +1,6 @@
 # TextUtility
 
-![TextUtility: open source badge, light and night modes, and a duplicate-line cleanup](docs/preview.gif)
+![Clean, transform and sort a list: remove duplicate lines, convert to uppercase, then sort A to Z](docs/preview.gif)
 
 A batch text editor that runs entirely in your browser. Clean, transform, sort, filter and compare lists of text without sending anything to a server.
 
